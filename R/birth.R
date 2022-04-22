@@ -5,7 +5,7 @@
 #' from the R package EgoCor.
 #'
 #'
-#' @format  A data frame with 903 rows and 8 variables (column-wise):
+#' @format  A data frame with 903 rows and 8 variables:
 #' \describe{
 #'   \item{x}{x-coordinate given in Cartesian format in meters,}
 #'   \item{y}{y-coordinate given in Cartesian format in meters,}
