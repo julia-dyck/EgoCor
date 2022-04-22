@@ -1,0 +1,16 @@
+---
+title: "Vignette: EgoCor"
+author: "Odile Sauzet and Julia Dyck"
+output: rmarkdown::html_vignette #read ?rmarkdown::html_vignette for output info
+vignette: >
+  %\VignetteIndexEntry{EgoCor Package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
