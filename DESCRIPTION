@@ -26,3 +26,5 @@ Suggests:
     knitr,
     rmarkdown,
 VignetteBuilder: knitr
+URL: https://github.com/julia-dyck/EgoCor
+BugReports: https://github.com/julia-dyck/EgoCor/issues
