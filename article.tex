@@ -14,11 +14,7 @@
 
 %% For Sweave-based articles about R packages:
 %% need no \usepackage{Sweave}
-\SweaveOpts{engine=R, eps=FALSE, keep.source = TRUE}
-<<preliminaries, echo=FALSE, results=hide>>=
-options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
-library("MASS")
-@
+
 
 
 %% -- Article metainformation (author, title, ...) -----------------------------
@@ -76,7 +72,7 @@ library("MASS")
 }
 
 \begin{document}
-\SweaveOpts{concordance=TRUE}
+\input{article-concordance}
 
 
 %% -- Introduction -------------------------------------------------------------
@@ -261,9 +257,11 @@ of \code{Days} that children were absent from school in Australia in a
 particular year, along with several covariates that can be employed as regressors.
 The data can be loaded by
 %
-<<data>>=
-data("quine", package = "MASS")
-@
+\begin{Schunk}
+\begin{Sinput}
+R> data("quine", package = "MASS")
+\end{Sinput}
+\end{Schunk}
 %
 and a basic frequency distribution of the response variable is displayed in
 Figure~\ref{fig:quine}.
@@ -284,14 +282,7 @@ before and after code input/output should be avoided (see above).
 
 \begin{figure}[t!]
 \centering
-<<visualization, echo=FALSE, fig=TRUE, height=5.2, width=7>>=
-par(mar = c(4, 4, 1, 1))
-plot(table(quine$Days), xlab = "Days", ylab = "Frequency", axes = FALSE)
-axis(2)
-axis(1, at = 0:16 * 5, labels = FALSE)
-axis(1, at = 0:8 * 10)
-box()
-@
+\includegraphics{article-visualization}
 \caption{\label{fig:quine} Frequency distribution for number of days absent
 from school.}
 \end{figure}
@@ -300,30 +291,90 @@ As a first model for the \code{quine} data, we fit the basic Poisson regression
 model. (Note that JSS prefers when the second line of code is indented by two
 spaces.)
 %
-<<poisson>>=
-m_pois <- glm(Days ~ (Eth + Sex + Age + Lrn)^2, data = quine,
-  family = poisson)
-@
+\begin{Schunk}
+\begin{Sinput}
+R> m_pois <- glm(Days ~ (Eth + Sex + Age + Lrn)^2, data = quine,
++    family = poisson)
+\end{Sinput}
+\end{Schunk}
 %
 To account for potential overdispersion we also consider a negative binomial
 GLM.
 %
-<<negbin>>=
-library("MASS")
-m_nbin <- glm.nb(Days ~ (Eth + Sex + Age + Lrn)^2, data = quine)
-@
+\begin{Schunk}
+\begin{Sinput}
+R> library("MASS")
+R> m_nbin <- glm.nb(Days ~ (Eth + Sex + Age + Lrn)^2, data = quine)
+\end{Sinput}
+\end{Schunk}
 %
 In a comparison with the BIC the latter model is clearly preferred.
 %
-<<comparison>>=
-BIC(m_pois, m_nbin)
-@
+\begin{Schunk}
+\begin{Sinput}
+R> BIC(m_pois, m_nbin)
+\end{Sinput}
+\begin{Soutput}
+       df      BIC
+m_pois 18 2046.851
+m_nbin 19 1157.235
+\end{Soutput}
+\end{Schunk}
 %
 Hence, the full summary of that model is shown below.
 %
-<<summary>>=
-summary(m_nbin)
-@
+\begin{Schunk}
+\begin{Sinput}
+R> summary(m_nbin)
+\end{Sinput}
+\begin{Soutput}
+Call:
+glm.nb(formula = Days ~ (Eth + Sex + Age + Lrn)^2, data = quine, 
+    init.theta = 1.60364105, link = log)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-3.0857  -0.8306  -0.2620   0.4282   2.0898  
+
+Coefficients: (1 not defined because of singularities)
+            Estimate Std. Error z value Pr(>|z|)    
+(Intercept)  3.00155    0.33709   8.904  < 2e-16 ***
+EthN        -0.24591    0.39135  -0.628  0.52977    
+SexM        -0.77181    0.38021  -2.030  0.04236 *  
+AgeF1       -0.02546    0.41615  -0.061  0.95121    
+AgeF2       -0.54884    0.54393  -1.009  0.31296    
+AgeF3       -0.25735    0.40558  -0.635  0.52574    
+LrnSL        0.38919    0.48421   0.804  0.42153    
+EthN:SexM    0.36240    0.29430   1.231  0.21818    
+EthN:AgeF1  -0.70000    0.43646  -1.604  0.10876    
+EthN:AgeF2  -1.23283    0.42962  -2.870  0.00411 ** 
+EthN:AgeF3   0.04721    0.44883   0.105  0.91622    
+EthN:LrnSL   0.06847    0.34040   0.201  0.84059    
+SexM:AgeF1   0.02257    0.47360   0.048  0.96198    
+SexM:AgeF2   1.55330    0.51325   3.026  0.00247 ** 
+SexM:AgeF3   1.25227    0.45539   2.750  0.00596 ** 
+SexM:LrnSL   0.07187    0.40805   0.176  0.86019    
+AgeF1:LrnSL -0.43101    0.47948  -0.899  0.36870    
+AgeF2:LrnSL  0.52074    0.48567   1.072  0.28363    
+AgeF3:LrnSL       NA         NA      NA       NA    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for Negative Binomial(1.6036) family taken to be 1)
+
+    Null deviance: 235.23  on 145  degrees of freedom
+Residual deviance: 167.53  on 128  degrees of freedom
+AIC: 1100.5
+
+Number of Fisher Scoring iterations: 1
+
+
+              Theta:  1.604 
+          Std. Err.:  0.214 
+
+ 2 x log-likelihood:  -1062.546 
+\end{Soutput}
+\end{Schunk}
 
 
 
@@ -348,8 +399,8 @@ maps, tables, \dots) that are not cited in the main text can be credited here.
 \end{leftbar}
 
 The results in this paper were obtained using
-\proglang{R}~\Sexpr{paste(R.Version()[6:7], collapse = ".")} with the
-\pkg{MASS}~\Sexpr{packageVersion("MASS")} package. \proglang{R} itself
+\proglang{R}~4.1.0 with the
+\pkg{MASS}~7.3.55 package. \proglang{R} itself
 and all packages used are available from the Comprehensive
 \proglang{R} Archive Network (CRAN) at
 \url{https://CRAN.R-project.org/}.
