@@ -16,7 +16,6 @@ Imports:
     geoR,
     SpatialTools,
     stats,
-    lme4,
     grDevices,
     graphics,
     shiny,
@@ -25,6 +24,7 @@ RdMacros: Rdpack
 Suggests:
     knitr,
     rmarkdown,
+    lme4
 VignetteBuilder: knitr
 URL: https://github.com/julia-dyck/EgoCor
 BugReports: https://github.com/julia-dyck/EgoCor/issues
