@@ -204,11 +204,11 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
                 '    column 2: Cartesian y-coordinates in meters',
                 '    column 3: outcome variable \n \n',sep="\n"))
 
-  data <- cbind(data[,1], data[,2], data[,3])
-  data <- as.data.frame(data.frame(geoR::jitterDupCoords(data[,1:2],max=0.01),data[,3]))
-  data.ge <- geoR::as.geodata(data, coords.col = 1:2, data.col = 3, na.action = "ifany")
-  #-> list containing [[1]]coordinates, [[2]]variable
-  sample.var = stats::var(data.ge[[2]])
+  data.ge = data[,1:3]
+#  data <- as.data.frame(data.frame(geoR::jitterDupCoords(data[,1:2],max=0.01),data[,3])) # was macht diese Zeile?
+  sp::coordinates(data.ge) = ~x+y
+  #-> list containing [[1]]variable
+  sample.var = stats::var(data.ge[[1]])
 
   #### estimate variogram
   variog.dist.bin.dep = function(max.dist.nbins.cbinded){
@@ -216,8 +216,7 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
     # purpose: make variog function usable in lapply()
     max.dist = max.dist.nbins.cbinded[1]
     nbins = max.dist.nbins.cbinded[2]
-    est.variog = geoR::variog(data.ge,estimator.type="classical",
-                              max.dist = max.dist, uvec = nbins, messages = F)
+    est.variog = gstat::variogram(object = data.ge[[1]] ~ 1, data = data.ge, cutoff = 500, width = 50)
     return(est.variog)}
 
   if(is.atomic(max.dist) && length(max.dist) == 1 && is.atomic(nbins) && length(nbins) == 1){# max.dist and nbins both scalar
@@ -253,7 +252,12 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
     ini.partial.sill <- sample.var # partial sill parameter of the exp. model (also called sigmasq)
     ini.shape <- vario$max.dist/3 # oder /4; shape parameter of the exp. model (also called phi)
     ini.values <- c(ini.partial.sill, ini.shape)
-    exp.variogram.mod <- geoR::variofit(vario, ini.cov.pars = ini.values, cov.model = "exponential", messages = F)
+    v = gstat::vgm(psill = sample.var, model = "Exp", range = max(data.ge[[1]])/3, nugget = 0)
+    exp.variogram.mod <- gstat::fit.variogram(est.variog, model = v,  # fitting the model with starting model
+                                       fit.sills = TRUE,
+                                       fit.ranges = TRUE,
+                                       fit.method = 1,
+                                       debug.level = 1, warn.if.neg = FALSE, fit.kappa = FALSE)
   }
 
   vmod.list = lapply(variog.list, variofit.less.arg)

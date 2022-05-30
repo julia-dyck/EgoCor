@@ -34,7 +34,7 @@ v2 <- vgm(psill = var(birth$birthweight),  # plausible starting value for psill 
 vfit.gstat = fit.variogram(variog.gstat, model=v2,  # fitting the model with starting model
                       fit.sills = TRUE,
                       fit.ranges = TRUE,
-                      fit.method = 7,
+                      fit.method = 1,
                       debug.level = 1, warn.if.neg = FALSE, fit.kappa = FALSE)
 vfit.gstat
 
