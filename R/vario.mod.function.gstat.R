@@ -170,8 +170,6 @@
 #'
 #' @export
 
-#test
-
 
 # Copy of the original function to be worked within -----------------------
 
