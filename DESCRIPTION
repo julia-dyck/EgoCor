@@ -1,7 +1,7 @@
 Package: EgoCor
 Type: Package
 Title: Simple Presentation of Estimated Exponential Semi-Variograms
-Version: 0.1.0
+Version: 1.0.0
 Authors@R: c(person("Julia", "Dyck", role = c("aut", "cre"), email = "j.dyck@uni-bielefeld.de"),
              person("Odile", "Sauzet", role = "aut") )
 Description: User friendly interface based on the R package 'geoR' to fit exponential parametric models to empirical semi-variograms in order to model the spatial correlation structure of health data. Geo-located health outcomes of survey participants may be used to model spatial effects on health in an ego-centred approach. 
