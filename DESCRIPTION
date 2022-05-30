@@ -21,7 +21,8 @@ Imports:
     shiny,
     Rdpack,
     gstat,
-    sv
+    sv,
+    sp
 RdMacros: Rdpack
 Suggests:
     knitr,

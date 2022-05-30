@@ -17,7 +17,7 @@
   #### input arguments (for call)
 
 data = birth
-data
+str(data)
 
   data.arg = deparse(substitute(data))
   max.dist.arg = deparse(substitute(data))
@@ -36,11 +36,11 @@ data
                 '    column 2: Cartesian y-coordinates in meters',
                 '    column 3: outcome variable \n \n',sep="\n"))
 
-  data <- cbind(data[,1], data[,2], data[,3])
-  data <- as.data.frame(data.frame(geoR::jitterDupCoords(data[,1:2],max=0.01),data[,3]))
-  data.ge <- sp::coordinates(data) = ~x+y
-  #-> list containing [[1]]coordinates, [[2]]variable
-  sample.var = stats::var(data.ge[[2]])
+  data.ge <- data[,1:3]
+#  data <- as.data.frame(data.frame(geoR::jitterDupCoords(data[,1:2],max=0.01),data[,3]))
+  sp::coordinates(data.ge) = ~x+y
+  #-> list containing [[1]]variable
+  sample.var = stats::var(data.ge[[1]])
 
   #### estimate variogram
   variog.dist.bin.dep = function(max.dist.nbins.cbinded){
@@ -48,9 +48,9 @@ data
     # purpose: make variog function usable in lapply()
     max.dist = max.dist.nbins.cbinded[1]
     nbins = max.dist.nbins.cbinded[2]
-    est.variog = geoR::variog(data.ge,estimator.type="classical",
-                              max.dist = max.dist, uvec = nbins, messages = F)
-    return(est.variog)}
+    est.variog = gstat::variogram(object = data.ge[[1]] ~ 1, data = data.ge, cutoff = 500, width = 50)
+    return(est.variog)
+    }
 
   if(is.atomic(max.dist) && length(max.dist) == 1 && is.atomic(nbins) && length(nbins) == 1){# max.dist and nbins both scalar
     max.dist.vect = max.dist
