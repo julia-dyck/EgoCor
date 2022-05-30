@@ -19,74 +19,36 @@
 data = birth
 str(data)
 
-  data.arg = deparse(substitute(data))
-  max.dist.arg = deparse(substitute(data))
-  nbins.arg = deparse(substitute(data))
-  pdf.arg = deparse(substitute(data))
-  pdf.directory.arg = deparse(substitute(data))
-  pdf.name.arg = deparse(substitute(data))
-
-  fct.call = as.call(str2lang(paste("vario.mod(data =", data.arg, ", max.dist = ", max.dist.arg, ", nbins = ", nbins.arg, ", pdf = ", pdf.arg, ", pdf.directory = ", pdf.directory.arg, ", pdf.name = ", pdf.name.arg, ")")))
-
-  #### data input: formatting
-  if(ncol(data)>3){warning('Data matrix contains more than 3 columns. Are the columns in correct order?\n')}
-  message(paste('Message:',
-                'Input data interpretation:',
-                '    column 1: Cartesian x-coordinates in meters',
-                '    column 2: Cartesian y-coordinates in meters',
-                '    column 3: outcome variable \n \n',sep="\n"))
-
   data.ge <- data[,1:3]
 #  data <- as.data.frame(data.frame(geoR::jitterDupCoords(data[,1:2],max=0.01),data[,3]))
   sp::coordinates(data.ge) = ~x+y
   #-> list containing [[1]]variable
   sample.var = stats::var(data.ge[[1]])
 
-  #### estimate variogram
-  variog.dist.bin.dep = function(max.dist.nbins.cbinded){
-    # variogram calculator for fixed data, only variable is the maximal distance
-    # purpose: make variog function usable in lapply()
-    max.dist = max.dist.nbins.cbinded[1]
-    nbins = max.dist.nbins.cbinded[2]
-    est.variog = gstat::variogram(object = data.ge[[1]] ~ 1, data = data.ge, cutoff = 500, width = 50)
-    return(est.variog)
-    }
 
-  if(is.atomic(max.dist) && length(max.dist) == 1 && is.atomic(nbins) && length(nbins) == 1){# max.dist and nbins both scalar
-    max.dist.vect = max.dist
-    nbins.vect = nbins
-  }
-  else if(is.vector(max.dist) && is.atomic(nbins) && length(nbins) == 1){# max.dist vector and nbins scalar
-    max.dist.vect = max.dist
-    nbins.vect = rep(nbins, length(max.dist.vect))
-  }
-  else if(is.atomic(max.dist) && length(max.dist) == 1 && is.vector(nbins)){# max.dist scalar and nbins vector
-    nbins.vect = nbins
-    max.dist.vect = rep(max.dist, length(nbins))
-  }
-  else if (is.vector(max.dist) && is.vector(nbins)){
-    max.dist.vect = max.dist
-    nbins.vect = nbins
-    if(length(max.dist.vect) != length(nbins.vect)){
-      stop("If vectors for both input parameters max.dist and nbins are specified, they must have the same length.")
-    }
-  }
-  else{stop("Input parameters max.dist and nbins have to be either \n     both a scalar, \n     max.dist a scalar and nbins a vector, \n     max.dist a vector and nbins a scalar, \n     both vectors of the same length.")}
+ est.variog = gstat::variogram(object = data.ge[[1]] ~ 1, data = data.ge, cutoff = 500, width = 50)
 
-  max.dist.nbins.matrix = cbind(max.dist.vect,nbins.vect)
-  variog.list = list()
-  variog.list = apply(max.dist.nbins.matrix, 1, variog.dist.bin.dep)
 
-  nbins.used = sapply(variog.list, function(x) length(x$uvec))
-
-  #### estimate exponential variogram model
-  variofit.less.arg = function(vario){
-    # variogram modelling function with parameter structure, st. lapply can be used
     ini.partial.sill <- sample.var # partial sill parameter of the exp. model (also called sigmasq)
-    ini.shape <- vario$max.dist/3 # oder /4; shape parameter of the exp. model (also called phi)
+    ini.shape <- max(data.ge[[1]])/3 # or /4; shape parameter of the exp. model (also called phi)
     ini.values <- c(ini.partial.sill, ini.shape)
-    exp.variogram.mod <- geoR::variofit(vario, ini.cov.pars = ini.values, cov.model = "exponential", messages = F)
-  }
+    v = gstat::vgm(psill = sample.var, model = "Exp", range = max(data.ge[[1]])/3, nugget = 0)
+    exp.variogram.mod <- gstat::fit.variogram(est.variog, model = v,  # fitting the model with starting model
+                                              fit.sills = TRUE,
+                                              fit.ranges = TRUE,
+                                              fit.method = 1,
+                                              debug.level = 1, warn.if.neg = FALSE, fit.kappa = FALSE)
+
+help(package = "gstat")
+
+
+
+
+
+
+
+
+
 
   vmod.list = lapply(variog.list, variofit.less.arg)
 

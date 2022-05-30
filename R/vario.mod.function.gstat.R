@@ -204,6 +204,7 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
                 '    column 2: Cartesian y-coordinates in meters',
                 '    column 3: outcome variable \n \n',sep="\n"))
 
+  colnames(data)[1:2] = c("x", "y")
   data.ge = data[,1:3]
 #  data <- as.data.frame(data.frame(geoR::jitterDupCoords(data[,1:2],max=0.01),data[,3])) # was macht diese Zeile?
   sp::coordinates(data.ge) = ~x+y
@@ -259,6 +260,8 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
                                        fit.method = 1,
                                        debug.level = 1, warn.if.neg = FALSE, fit.kappa = FALSE)
   }
+
+# worked until here
 
   vmod.list = lapply(variog.list, variofit.less.arg)
 
