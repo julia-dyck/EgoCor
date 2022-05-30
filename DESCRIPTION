@@ -19,7 +19,9 @@ Imports:
     grDevices,
     graphics,
     shiny,
-    Rdpack
+    Rdpack,
+    gstat,
+    sv
 RdMacros: Rdpack
 Suggests:
     knitr,
