@@ -396,7 +396,7 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
                            shiny::fluidRow(
                              shiny::column(width = 5,
                                            shiny::radioButtons(inputId = "modID",
-                                                               label = "Choose a maximal distance and nbins combination.",
+                                                               label = "Please choose a model:",
                                                                choices = paste0("Model ", as.numeric(rownames(infotable))," with ",
                                                                                 "max. distance of ", max.dist.vect, " and ",
                                                                                 nbins.used, " bins"))),
