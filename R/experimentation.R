@@ -41,11 +41,13 @@ str(data)
 
 help(package = "gstat")
 
+exp.variogram.mod
+summary(exp.variogram.mod)
 
 
 
-
-
+est.pars = c(exp.variogram.mod[,2],exp.variogram.mod[2,3])
+str(est.pars)
 
 
 
@@ -53,7 +55,7 @@ help(package = "gstat")
   vmod.list = lapply(variog.list, variofit.less.arg)
 
   par.extraction = function(vmod){
-    est.pars = summary(vmod)$estimated.pars
+    est.pars = svmod)$estimated.pars
     #loss.fct.value = summary(vmod)$sum.of.squares
     return(est.pars)
   }

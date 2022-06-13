@@ -298,7 +298,8 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
     graphics::par(mgp = c(1.5, 0.5, 0.0))
     graphics::par(omi = c(1.0, 1, 1.5, 1.0))
     for (d in 1:length(max.dist.vect)){
-      plt = plot(variog.list[[d]], xaxt = "n", yaxt = "n")
+      plt = plot(variog.list[[d]]$dist, variog.list[[d]]$gamma, pch = 16, xaxt = "n", yaxt = "n",
+                 xlab = "Distance", ylab = "Semivariance")
       plt
       graphics::axis(1, cex.axis = 0.8)
       graphics::axis(2, cex.axis = 0.8)
@@ -308,7 +309,7 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
                       adj = 0,
                       cex.main = 1,
                       font = 1)
-      graphics::lines(vmod.list[[d]])
+      graphics::curve(vmod.list[[d]]$psill[1] + vmod.list[[d]]$psill[2]*(1 - exp(-x/vmod.list[[d]]$range[2])), add = TRUE)
       pars = round(infotable[d,c(4,5,7,8,9)], digits = 2)
 
       if(pars[3] > (10*max.dist.vect[[d]]) | pars[3] < 0){
@@ -335,9 +336,10 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
   #### Visualization in RWindow
   if(windowplots == T){
     for (d in 1:length(max.dist.vect)){
-#      grDevices::x11() # open a new window for each plot
+      # grDevices::x11() # open a new window for each plot
       # esp. to prevent overwriting plots in basic R GUI
-      plt = plot(variog.list[[d]], vmod.list[[d]], xaxt = "n", yaxt = "n")
+      plt = plot(variog.list[[d]]$dist, variog.list[[d]]$gamma, pch = 16, xaxt = "n", yaxt = "n",
+                 xlab = "Distance", ylab = "Semivariance")
       graphics::title(paste("Maximal distance:",max.dist.vect[d],
                             "\nNumber of bins:",nbins.used[d] , sep=" "),
                       adj = 0,
@@ -345,6 +347,7 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
       plt
       graphics::axis(1, cex.axis = 0.8)
       graphics::axis(2, cex.axis = 0.8)
+      graphics::curve(vmod.list[[d]]$psill[1] + vmod.list[[d]]$psill[2]*(1 - exp(-x/vmod.list[[d]]$range[2])), add = TRUE)
       pars = round(infotable[d,c(4,5,7,8,9)], digits = 2)
 
       if(pars[3] > (10*max.dist.vect[[d]]) | pars[3] < 0 ){
