@@ -217,7 +217,7 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
     # purpose: make variog function usable in lapply()
     max.dist = max.dist.nbins.cbinded[1]
     nbins = max.dist.nbins.cbinded[2]
-    est.variog = gstat::variogram(object = data.ge[[1]] ~ 1, data = data.ge, cutoff = 500, width = 50)
+    est.variog = gstat::variogram(object = data.ge[[1]] ~ 1, data = data.ge, cutoff = max.dist, width = max.dist / nbins)
     return(est.variog)}
 
   if(is.atomic(max.dist) && length(max.dist) == 1 && is.atomic(nbins) && length(nbins) == 1){# max.dist and nbins both scalar
@@ -241,11 +241,11 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
   }
   else{stop("Input parameters max.dist and nbins have to be either \n     both a scalar, \n     max.dist a scalar and nbins a vector, \n     max.dist a vector and nbins a scalar, \n     both vectors of the same length.")}
 
-  max.dist.nbins.matrix = cbind(max.dist.vect,nbins.vect)
+  max.dist.nbins.matrix = cbind(max.dist.vect, nbins.vect)
   variog.list = list()
   variog.list = apply(max.dist.nbins.matrix, 1, variog.dist.bin.dep)
 
-  nbins.used = sapply(variog.list, function(x) length(x$uvec)) ### könnte Probleme bereiten
+  nbins.used = sapply(variog.list, function(x) dim(x)[1])
 
   #### estimate exponential variogram model
   variofit.less.arg = function(vario){
@@ -264,13 +264,19 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
   vmod.list = lapply(variog.list, variofit.less.arg)
 
   par.extraction = function(vmod){
-    est.pars = c(vmod[1,2], vmod[2,2], vmod[2,3])
+    est.pars = c(vmod$psill[1], vmod$psill[2], vmod$range[2])
     #loss.fct.value = summary(vmod)$sum.of.squares
     return(est.pars)
   }
+
+  prac.range.calc = function(vmod){
+    prac.range = -log(0.05*(1+(vmod$psill[1]/(vmod$psill[2]))))*vmod$range[2]
+    return(prac.range)
+  }
+
   estimated.pars = t(sapply(vmod.list, par.extraction))
   colnames(estimated.pars) = c("nugget","partial.sill","shape")
-#  prac.range = (estimated.pars[,1] + estimated.pars[,2])*0.95 falsch
+  prac.range = sapply(vmod.list, prac.range.calc)
   est.total.var = estimated.pars[,1] + estimated.pars[,2]
   RSV = estimated.pars[,2]/est.total.var # relative structured variability
   rel.bias = est.total.var/sample.var # relative bias
@@ -331,7 +337,7 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
     for (d in 1:length(max.dist.vect)){
       grDevices::x11() # open a new window for each plot
       # esp. to prevent overwriting plots in basic R GUI
-      plt = plot(variog.list[[d]], xaxt = "n", yaxt = "n")
+      plt = plot(variog.list[[d]], vmod.list[[d]], xaxt = "n", yaxt = "n")
       graphics::title(paste("Maximal distance:",max.dist.vect[d],
                             "\nNumber of bins:",nbins.used[d] , sep=" "),
                       adj = 0,
@@ -339,7 +345,6 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
       plt
       graphics::axis(1, cex.axis = 0.8)
       graphics::axis(2, cex.axis = 0.8)
-      graphics::lines(vmod.list[[d]])
       pars = round(infotable[d,c(4,5,7,8,9)], digits = 2)
 
       if(pars[3] > (10*max.dist.vect[[d]]) | pars[3] < 0 ){
@@ -430,7 +435,7 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
                       "max. distance of ", max.dist.vect, " and ",
                       nbins.used, " bins")
         d = as.numeric(which(expr == input$modID))
-        plt = plot(variog.list[[d]], xaxt = "n", yaxt = "n")
+        plt = plot(variog.list[[d]], model = vmod.list[[d]], xaxt = "n", yaxt = "n")
         graphics::title(paste("Maximal distance:",max.dist.vect[d],
                               "\nNumber of bins:",nbins.used[d] , sep=" "),
                         adj = 0,
@@ -438,7 +443,7 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
         plt
         graphics::axis(1, cex.axis = 0.8)
         graphics::axis(2, cex.axis = 0.8)
-        graphics::lines(vmod.list[[d]])
+#        graphics::lines(vmod.list[[d]])
         pars = round(infotable[d,c(3,4,6,7,8)], digits = 2)
       })
 
