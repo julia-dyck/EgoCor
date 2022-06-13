@@ -253,7 +253,7 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
     ini.partial.sill <- sample.var # partial sill parameter of the exp. model (also called sigmasq)
     ini.shape <- max(vario$dist)/3 # oder /4; shape parameter of the exp. model (also called phi)
     ini.values <- c(ini.partial.sill, ini.shape)
-    v = gstat::vgm(psill = sample.var, model = "Exp", range = max(vario$dist)/3, nugget = 0)
+    v = gstat::vgm(psill = ini.partial.sill, model = "Exp", range = ini.shape, nugget = 0)
     exp.variogram.mod <- gstat::fit.variogram(vario, model = v,  # fitting the model with starting model
                                        fit.sills = TRUE,
                                        fit.ranges = TRUE,
