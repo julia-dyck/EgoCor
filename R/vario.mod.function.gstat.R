@@ -206,7 +206,7 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
 
   colnames(data)[1:2] = c("x", "y")
   data.ge = data[,1:3]
-#  data <- as.data.frame(data.frame(geoR::jitterDupCoords(data[,1:2],max=0.01),data[,3])) # was macht diese Zeile?
+  #  data <- as.data.frame(data.frame(geoR::jitterDupCoords(data[,1:2],max=0.01),data[,3])) # was macht diese Zeile?
   sp::coordinates(data.ge) = ~x+y
   #-> list containing [[1]]variable
   sample.var = stats::var(data.ge[[1]])
@@ -245,34 +245,32 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
   variog.list = list()
   variog.list = apply(max.dist.nbins.matrix, 1, variog.dist.bin.dep)
 
-  nbins.used = sapply(variog.list, function(x) length(x$uvec))
+  nbins.used = sapply(variog.list, function(x) length(x$uvec)) ### könnte Probleme bereiten
 
   #### estimate exponential variogram model
   variofit.less.arg = function(vario){
     # variogram modelling function with parameter structure, st. lapply can be used
     ini.partial.sill <- sample.var # partial sill parameter of the exp. model (also called sigmasq)
-    ini.shape <- vario$max.dist/3 # oder /4; shape parameter of the exp. model (also called phi)
+    ini.shape <- max(vario$dist)/3 # oder /4; shape parameter of the exp. model (also called phi)
     ini.values <- c(ini.partial.sill, ini.shape)
-    v = gstat::vgm(psill = sample.var, model = "Exp", range = max(data.ge[[1]])/3, nugget = 0)
-    exp.variogram.mod <- gstat::fit.variogram(est.variog, model = v,  # fitting the model with starting model
+    v = gstat::vgm(psill = sample.var, model = "Exp", range = max(vario$dist)/3, nugget = 0)
+    exp.variogram.mod <- gstat::fit.variogram(vario, model = v,  # fitting the model with starting model
                                        fit.sills = TRUE,
                                        fit.ranges = TRUE,
-                                       fit.method = 1,
                                        debug.level = 1, warn.if.neg = FALSE, fit.kappa = FALSE)
   }
 
-# worked until here
 
   vmod.list = lapply(variog.list, variofit.less.arg)
 
   par.extraction = function(vmod){
-    est.pars = summary(vmod)$estimated.pars
+    est.pars = c(vmod[1,2], vmod[2,2], vmod[2,3])
     #loss.fct.value = summary(vmod)$sum.of.squares
     return(est.pars)
   }
   estimated.pars = t(sapply(vmod.list, par.extraction))
   colnames(estimated.pars) = c("nugget","partial.sill","shape")
-  prac.range = sapply(estimated.pars[,3], geoR::practicalRange, cov.model="exp")
+#  prac.range = (estimated.pars[,1] + estimated.pars[,2])*0.95 falsch
   est.total.var = estimated.pars[,1] + estimated.pars[,2]
   RSV = estimated.pars[,2]/est.total.var # relative structured variability
   rel.bias = est.total.var/sample.var # relative bias
