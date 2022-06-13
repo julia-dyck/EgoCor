@@ -335,7 +335,7 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
   #### Visualization in RWindow
   if(windowplots == T){
     for (d in 1:length(max.dist.vect)){
-      grDevices::x11() # open a new window for each plot
+#      grDevices::x11() # open a new window for each plot
       # esp. to prevent overwriting plots in basic R GUI
       plt = plot(variog.list[[d]], vmod.list[[d]], xaxt = "n", yaxt = "n")
       graphics::title(paste("Maximal distance:",max.dist.vect[d],
@@ -435,7 +435,8 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
                       "max. distance of ", max.dist.vect, " and ",
                       nbins.used, " bins")
         d = as.numeric(which(expr == input$modID))
-        plt = plot(variog.list[[d]], model = vmod.list[[d]], xaxt = "n", yaxt = "n")
+        plt = plot(variog.list[[d]]$dist, variog.list[[d]]$gamma, pch = 16, xaxt = "n", yaxt = "n",
+                   xlab = "Distance", ylab = "Semivariance")
         graphics::title(paste("Maximal distance:",max.dist.vect[d],
                               "\nNumber of bins:",nbins.used[d] , sep=" "),
                         adj = 0,
@@ -443,7 +444,7 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
         plt
         graphics::axis(1, cex.axis = 0.8)
         graphics::axis(2, cex.axis = 0.8)
-#        graphics::lines(vmod.list[[d]])
+        graphics::curve(vmod.list[[d]]$psill[1] + vmod.list[[d]]$psill[2]*(1 - exp(-x/vmod.list[[d]]$range[2])), add = TRUE)
         pars = round(infotable[d,c(3,4,6,7,8)], digits = 2)
       })
 
