@@ -55,7 +55,7 @@ str(est.pars)
   vmod.list = lapply(variog.list, variofit.less.arg)
 
   par.extraction = function(vmod){
-    est.pars = svmod)$estimated.pars
+    est.pars = svmod$estimated.pars
     #loss.fct.value = summary(vmod)$sum.of.squares
     return(est.pars)
   }
