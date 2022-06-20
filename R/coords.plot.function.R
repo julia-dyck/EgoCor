@@ -31,7 +31,6 @@
 
 coords.plot <- function(data){
   #### necessary packages
-  # gstat
   # graphics
   if(ncol(data)>3){warning('Data matrix contains more than 3 columns. Are the columns in correct order?\n')}
   message(paste('Message:',
