@@ -39,8 +39,15 @@ bootstrap.unc.check = function(sample, max.dist, nbins, B = 1000, thr=c(1.1,1.5,
   mod.pars = c(sv.mod$psill[1], sv.mod$psill[2], sv.mod$range[2])
   # (3)
   Dist_mat = SpatialTools::dist1(coords) # NxN distance matrix
-  Cov_mat = geoR::cov.spatial(Dist_mat, cov.model=c("exponential","pure.nugget"),
-                        cov.pars = rbind(c(mod.pars[2],mod.pars[3]),c(mod.pars[1],0)))  # hier kein Analogon gefunden
+
+  expmod = function(distvec, psill, phi){
+    return(psill*exp(-distvec/phi))
+  }
+
+  Cov_mat = apply(X = Dist_mat, MARGIN = 1, FUN = expmod, psill = mod.pars[2], phi = mod.pars[3])
+
+  # Cov_mat = geoR::cov.spatial(Dist_mat, cov.model=c("exponential","pure.nugget"),
+  #                      cov.pars = rbind(c(mod.pars[2],mod.pars[3]),c(mod.pars[1],0)))  # hier kein Analogon gefunden
   # NxN Covariance matrix, contains all point-pairs' estimated Covariances
   # based on sv.mod
   # (4) Cholesky decomposition -> fertige Fkt. existieren
