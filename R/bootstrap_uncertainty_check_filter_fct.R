@@ -53,7 +53,7 @@ bootstrap.unc.check = function(sample, max.dist, nbins, B = 1000, thr=c(1.1,1.5,
   # (4) Cholesky decomposition -> fertige Fkt. existieren
 
 ### zum testen: Damit Matrix positiv definit ist
-  Cov_mat = Cov_mat + diag(rep(0.0001, nrow(sample)))
+  Cov_mat = Cov_mat + diag(rep(0.000001, nrow(sample)))
 
   L = t(chol(Cov_mat))
   # (5) transform y in an iid sample
