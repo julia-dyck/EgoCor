@@ -2,7 +2,7 @@
 #### bootstrap uncertainty fct. using the checkfilter ####
 ##########################################################
 
-# needed packages
+# necessary packages
 # ## gstat
 # ## sp
 # ## SpatialTools
@@ -26,15 +26,21 @@ bootstrap.unc.check = function(sample, max.dist, nbins, B = 1000, thr=c(1.1,1.5,
   # (2) prep sv-model
   # emp.sv = geoR::variog(y.geo, estimator.type="classical", max.dist = max.dist, uvec = nbins, messages = F)
   emp.sv = gstat::variogram(object = y.geo[[1]] ~ 1, data = y.geo, cutoff = max.dist, width = max.dist / nbins)
-  ini.partial.sill <- stats::var(y.geo[[1]])
-  ini.shape <- emp.sv$max.dist/3
-  ini.values <- c(ini.partial.sill, ini.shape)
-  sv.mod <- geoR::variofit(emp.sv, ini.cov.pars = ini.values, cov.model = "exponential", messages = F)
-  mod.pars = c(sv.mod$nugget, sv.mod$cov.pars[1],sv.mod$cov.pars[2])
+  ini.partial.sill = stats::var(y.geo[[1]])
+  ini.shape = emp.sv$max.dist/3
+  ini.values = c(ini.partial.sill, ini.shape)
+  # sv.mod <- geoR::variofit(emp.sv, ini.cov.pars = ini.values, cov.model = "exponential", messages = F)
+  v = gstat::vgm(psill = ini.partial.sill, model = "Exp", range = ini.shape, nugget = 0)
+  sv.mod = gstat::fit.variogram(emp.sv, model = v,  # fitting the model with starting model
+                                            fit.sills = TRUE,
+                                            fit.ranges = TRUE,
+                                            debug.level = 1, warn.if.neg = FALSE, fit.kappa = FALSE)
+  # mod.pars = c(sv.mod$nugget, sv.mod$cov.pars[1],sv.mod$cov.pars[2])
+  mod.pars = c(sv.mod$psill[1], sv.mod$psill[2], sv.mod$range[2])
   # (3)
   Dist_mat = SpatialTools::dist1(coords) # NxN distance matrix
   Cov_mat = geoR::cov.spatial(Dist_mat, cov.model=c("exponential","pure.nugget"),
-                        cov.pars = rbind(c(mod.pars[2],mod.pars[3]),c(mod.pars[1],0)))
+                        cov.pars = rbind(c(mod.pars[2],mod.pars[3]),c(mod.pars[1],0)))  # hier kein Analogon gefunden
   # NxN Covariance matrix, contains all point-pairs' estimated Covariances
   # based on sv.mod
   # (4) Cholesky decomposition -> fertige Fkt. existieren
