@@ -10,7 +10,7 @@
 
 bootstrap.unc.check = function(sample, max.dist, nbins, B = 1000, thr=c(1.1,1.5,2.0,2.5,3.0)){
   # sample.geo = geoR::as.geodata(sample)
-  sample.geo = sample
+  sample.geo = as.data.frame(sample)
   colnames(sample.geo)[1:2] = c("x", "y")
   sp::coordinates(sample.geo) = ~x+y
   coords = sp::coordinates(sample.geo)
@@ -21,13 +21,13 @@ bootstrap.unc.check = function(sample, max.dist, nbins, B = 1000, thr=c(1.1,1.5,
   y = nscore.obj$nscore
   y.with.coords = cbind(coords,y)
   # y.geo = geoR::as.geodata(y.with.coords)
-  y.geo = y.with.coords
-  sp:coordinates(y.geo) = ~x+y
+  y.geo = as.data.frame(y.with.coords)
+  sp::coordinates(y.geo) = ~x+y
   # (2) prep sv-model
   # emp.sv = geoR::variog(y.geo, estimator.type="classical", max.dist = max.dist, uvec = nbins, messages = F)
   emp.sv = gstat::variogram(object = y.geo[[1]] ~ 1, data = y.geo, cutoff = max.dist, width = max.dist / nbins)
   ini.partial.sill = stats::var(y.geo[[1]])
-  ini.shape = emp.sv$max.dist/3
+  ini.shape = max(emp.sv$dist)/3
   ini.values = c(ini.partial.sill, ini.shape)
   # sv.mod <- geoR::variofit(emp.sv, ini.cov.pars = ini.values, cov.model = "exponential", messages = F)
   v = gstat::vgm(psill = ini.partial.sill, model = "Exp", range = ini.shape, nugget = 0)
