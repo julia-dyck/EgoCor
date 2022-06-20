@@ -2,7 +2,7 @@
 #'
 #' Semi-variogram modeling function
 #'
-#' Based on the \code{geoR} functions \code{variog} and \code{variofit}, the function fits one
+#' Based on the \code{gstat} functions \code{variogram}, \code{vvgm} and \code{fit.variogram}, the function fits one
 #' or multiple exponential empirical semi-variograms based on provided maximal distances and number of bins.
 #' All estimated parameter values are saved in a single table.
 #' Graphics of all models can be observed in a shiny application output (default)
@@ -74,7 +74,7 @@
 #'
 #'          \strong{Empirical semi-variogram estimator:}
 #'
-#'          Using the \code{geoR} functions \code{variog} an empirical semi-variogram according to
+#'          Using the \code{gstat} function \code{variogram} an empirical semi-variogram according to
 #'          Matheron's semi-variogram estimator \insertCite{matheron1962traite}{EgoCor}
 #'          \deqn{\hat{\gamma}(h) = \frac{1}{2\cdot|N(h)|} \sum_{(\mathbf{s_i},
 #'          \mathbf{s_j}) \in N(h)}\{Z(\mathbf{s_i})- Z(\mathbf{s_j})\}^2}
@@ -87,7 +87,7 @@
 #'          \insertCite{Cressie.1993}{EgoCor}
 #'          \deqn{\gamma_{exp}(h) =  c_0 + \sigma_0^2 \Big\{1 - \exp\big(- \frac{h}{\phi}\big)\Big\}}
 #'          for \eqn{h > 0}
-#'          is fitted using the \code{variofit} function from package \code{geoR} via
+#'          is fitted using the \code{vgm} and \code{fit.variogram} function from package \code{gstat} via
 #'          weighted least squares estimation.
 #'          For the numerical optimization, starting values for the model parameters have to be provided.
 #'          The initial value for the partial sill \eqn{\sigma_0^2} equals the empirical variance of
@@ -154,10 +154,10 @@
 #'}
 #'
 #'
-#' @seealso \code{variog} in the \code{geoR} package for further information on the arguments \code{max.dist} and \code{nbins} as well as on
+#' @seealso \code{variogram} in the \code{gstat} package for further information on the arguments \code{max.dist} and \code{nbins} as well as on
 #'          the estimation of the empirical semi-variogram itself;
 #'
-#'          \code{variofit} in the \code{geoR} package for further information on the default settings
+#'          \code{fit.variogram} in the \code{gstat} package for further information on the default settings
 #'          when estimating the exponential semi-variogram model.
 #'
 #'
@@ -171,15 +171,13 @@
 #' @export
 
 
-# Copy of the original function to be worked within -----------------------
-
-
 
 vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
                      shinyresults = TRUE, windowplots = FALSE,
                      pdf = FALSE, pdf.directory = getwd(), pdf.name = "Semivariograms"){
   #### necessary packages
-  #geoR
+  #gstat
+  #sp
   #SpatialTools
   #stats
   #graphics
