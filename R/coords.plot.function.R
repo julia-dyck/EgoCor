@@ -51,6 +51,7 @@ coords.plot <- function(data){
   ### visualization of the coordinates
   x.range = c(min(data[,1]), max(data[,1]))
   y.range = c(min(data[,2]), max(data[,2]))
+  # splitting up the data set in NA and non-NA
   data_na = data[which(is.na(data[,3])), 1:2]
   data_no_na = data[which(!is.na(data[,3])), 1:2]
   plot(data_no_na, main = "Coordinate plot",
