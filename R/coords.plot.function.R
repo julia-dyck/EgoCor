@@ -31,8 +31,7 @@
 
 coords.plot <- function(data){
   #### necessary packages
-  #geoR
-  #graphics
+  # graphics
   if(ncol(data)>3){warning('Data matrix contains more than 3 columns. Are the columns in correct order?\n')}
   message(paste('Message:',
                 'Input data interpretation:',
@@ -41,18 +40,25 @@ coords.plot <- function(data){
                 '    column 3: outcome variable \n \n',sep="\n"))
 
   # formatting of the data
-  data <- data
-  data <- as.data.frame(data.frame(geoR::jitterDupCoords(data[,1:2],max=0.01),data[,3]))
-  data.ge <- geoR::as.geodata(data, coords.col = 1:2, data.col = 3, na.action = "ifany")
-  #-> list containing [[1]]coordinates, [[2]]variable
+  # data <- as.data.frame(data)
+  # data <- as.data.frame(data.frame(geoR::jitterDupCoords(data[,1:2],max=0.01),data[,3]))
+  # data.ge = data
+  # data.ge <- geoR::as.geodata(data, coords.col = 1:2, data.col = 3, na.action = "ifany")
+  # colnames(data.ge)[1:2] = c("x", "y")
+  # sp::coordinates(data.ge) = ~x+y
+  #-> list containing [[1]] variable and coordinates
 
   ### visualization of the coordinates
   x.range = c(min(data[,1]), max(data[,1]))
   y.range = c(min(data[,2]), max(data[,2]))
-  plot(data[which(is.na(data[,3])),1:2], main = "Coordinate plot",
-       xlim = x.range, ylim = y.range, col = 2, pch = 4)
-  graphics::points(data.ge[[1]])
+  # splitting up the data set in NA and non-NA
+  data_na = data[which(is.na(data[,3])), 1:2]
+  data_no_na = data[which(!is.na(data[,3])), 1:2]
+  plot(data_no_na, main = "Coordinate plot",
+       xlim = x.range, ylim = y.range)
+  graphics::points(data_na[,1], data_na[,2], pch = 4, col = "red")
   graphics::legend("topright", title="outcome observed?", legend=c("yes  ", "no"),
          pch = c(1,4), col = c(1,2), ncol = 2, cex = 0.8)
 
 }
+
