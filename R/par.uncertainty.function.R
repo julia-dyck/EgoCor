@@ -151,7 +151,7 @@ par.uncertainty = function(vario.mod.output, mod.nr,
     # data <- as.data.frame(data.frame(geoR::jitterDupCoords(data[,1:2],max=0.01),data[,3]))
     # data.ge <- geoR::as.geodata(data, coords.col = 1:2, data.col = 3, na.action = "ifany")
     data.ge = as.data.frame(data)
-    # data.ge = stats::na.omit(data.ge)
+    data.ge = stats::na.omit(data.ge)
     colnames(data.ge)[1:2] = c("x", "y")
     sp::coordinates(data.ge) = ~x+y
 
