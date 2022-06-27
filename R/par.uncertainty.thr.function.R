@@ -3,6 +3,21 @@
 # to tune the threshold manually
 
 
+#' Title
+#'
+#' @param vario.mod.output
+#' @param mod.nr
+#' @param par.est
+#' @param data
+#' @param max.dist
+#' @param nbins
+#' @param B
+#' @param threshold.factor
+#'
+#' @return
+#' @export
+#'
+#' @examples
 par.uncertainty.thr = function(vario.mod.output, mod.nr,
                            par.est = NULL, data= NULL, max.dist=NULL,nbins=NULL,
                            B = 1000, threshold.factor = 1.2){
