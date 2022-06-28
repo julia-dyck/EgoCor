@@ -47,6 +47,7 @@ coords.plot <- function(data){
   # colnames(data.ge)[1:2] = c("x", "y")
   # sp::coordinates(data.ge) = ~x+y
   #-> list containing [[1]] variable and coordinates
+  if(sum(is.na(data[,1:2])) > 0){stop("Data contains rows with missing coordinates. Please remove rows with incomplete coordinates.")}
 
   ### visualization of the coordinates
   x.range = c(min(data[,1]), max(data[,1]))
