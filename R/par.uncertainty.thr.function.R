@@ -3,6 +3,21 @@
 # to tune the threshold manually
 
 
+#' Title
+#'
+#' @param vario.mod.output
+#' @param mod.nr
+#' @param par.est
+#' @param data
+#' @param max.dist
+#' @param nbins
+#' @param B
+#' @param threshold.factor
+#'
+#' @return
+#' @export
+#'
+#' @examples
 par.uncertainty.thr = function(vario.mod.output, mod.nr,
                            par.est = NULL, data= NULL, max.dist=NULL,nbins=NULL,
                            B = 1000, threshold.factor = 1.2){
@@ -38,9 +53,10 @@ par.uncertainty.thr = function(vario.mod.output, mod.nr,
                                                                                                                           '    column 2: cartesian y-coordinates in meters',
                                                                                                                           '    column 3: outcome variable \n \n',sep="\n")))}
     data <- cbind(data[,1], data[,2], data[,3])
-    data <- as.data.frame(data.frame(geoR::jitterDupCoords(data[,1:2],max=0.01),data[,3]))
+    # data <- as.data.frame(data.frame(geoR::jitterDupCoords(data[,1:2],max=0.01),data[,3]))
     # data.ge <- geoR::as.geodata(data, coords.col = 1:2, data.col = 3, na.action = "ifany")
-    data.ge = data
+    data.ge = as.data.frame(data)
+    data.ge = stats::na.omit(data.ge)
     colnames(data.ge)[1:2] = c("x", "y")
     sp::coordinates(data.ge) = ~x+y
 
