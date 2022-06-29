@@ -50,10 +50,12 @@ distance.info = function(data){
                 '    column 3: outcome variable \n \n',sep="\n"))
 
   if(sum(is.na(data[,1:2])) > 0){
-    warning("Data contains rows with missing coordinates. Rows with incomplete coordinates are ignored.")
     ind.missing.x = which(is.na(data[,1]))
     ind.missing.y = which(is.na(data[,2]))
     ind.incompl.coords = unique(c(ind.missing.x, ind.missing.y))
+    warning(paste("Data contains",
+                  length(ind.incompl.coords),
+                  "rows with missing coordinates. Rows with incomplete coordinates are ignored."))
     data = data[-ind.incompl.coords,]
   }
 
