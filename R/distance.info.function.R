@@ -49,7 +49,13 @@ distance.info = function(data){
                 '    column 2: Cartesian y-coordinates in meters',
                 '    column 3: outcome variable \n \n',sep="\n"))
 
-  if(sum(is.na(data[,1:2])) > 0){stop("Data contains rows with missing coordinates. Please remove rows with incomplete coordinates.")}
+  if(sum(is.na(data[,1:2])) > 0){
+    warning("Data contains rows with missing coordinates. Rows with incomplete coordinates are ignored.")
+    ind.missing.x = which(is.na(data[,1]))
+    ind.missing.y = which(is.na(data[,2]))
+    ind.incompl.coords = unique(c(ind.missing.x, ind.missing.y))
+    data = data[-ind.incompl.coords,]
+  }
 
   coordinates = as.matrix(data[,1:2])
   distmat = SpatialTools::dist1(coordinates)
