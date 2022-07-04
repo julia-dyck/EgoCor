@@ -53,8 +53,6 @@ par.uncertainty.thr = function(vario.mod.output, mod.nr,
                                                                                                                           '    column 2: cartesian y-coordinates in meters',
                                                                                                                           '    column 3: outcome variable \n \n',sep="\n")))}
     data <- cbind(data[,1], data[,2], data[,3])
-    # data <- as.data.frame(data.frame(geoR::jitterDupCoords(data[,1:2],max=0.01),data[,3]))
-    # data.ge <- geoR::as.geodata(data, coords.col = 1:2, data.col = 3, na.action = "ifany")
     data.ge = as.data.frame(data)
     data.ge = stats::na.omit(data.ge)
     colnames(data.ge)[1:2] = c("x", "y")
