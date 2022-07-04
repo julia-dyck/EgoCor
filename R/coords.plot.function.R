@@ -39,15 +39,6 @@ coords.plot <- function(data){
                 '    column 2: Cartesian y-coordinates in meters',
                 '    column 3: outcome variable \n \n',sep="\n"))
 
-  # formatting of the data
-  # data <- as.data.frame(data)
-  # data <- as.data.frame(data.frame(geoR::jitterDupCoords(data[,1:2],max=0.01),data[,3]))
-  # data.ge = data
-  # data.ge <- geoR::as.geodata(data, coords.col = 1:2, data.col = 3, na.action = "ifany")
-  # colnames(data.ge)[1:2] = c("x", "y")
-  # sp::coordinates(data.ge) = ~x+y
-  #-> list containing [[1]] variable and coordinates
-
   ### visualization of the coordinates
   x.range = c(min(data[,1]), max(data[,1]))
   y.range = c(min(data[,2]), max(data[,2]))
