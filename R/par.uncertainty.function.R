@@ -116,7 +116,8 @@
 
 par.uncertainty = function(vario.mod.output, mod.nr,
                            par.est = NULL, data= NULL, max.dist=NULL,nbins=NULL,
-                           B = 1000){
+                           B = 1000, threshold.factor = NULL){
+
   vario.mod.output.arg <- deparse(substitute(vario.mod.output))
   mod.nr.arg <- deparse(substitute(mod.nr))
   par.est.arg <- deparse(substitute(par.est))
@@ -129,6 +130,16 @@ par.uncertainty = function(vario.mod.output, mod.nr,
 
   if((missing(vario.mod.output)+missing(mod.nr)>0) & (missing(par.est))+(missing(data))+(missing(max.dist))+(missing(nbins))>0){
     stop("One approach regarding the input arguments has to be chosen.\n  and arguments have to be provided accordingly.\n")}
+
+  ### calling the par.uncertainty.thr function
+
+  if (!is.null(threshold.factor)){
+    par.uncertainty.thr(vario.mod.output, mod.nr,
+                        par.est, data, max.dist,nbins,
+                        B, threshold.factor)
+  }
+
+  else{
 
   # 2. approach:
   if(missing(vario.mod.output) & missing(mod.nr)){ # manual argument specification
@@ -147,6 +158,8 @@ par.uncertainty = function(vario.mod.output, mod.nr,
                                                                                                                           '    column 1: Cartesian x-coordinates in meters',
                                                                                                                           '    column 2: Cartesian y-coordinates in meters',
                                                                                                                           '    column 3: outcome variable \n \n',sep="\n")))}
+
+
     data <- cbind(data[,1], data[,2], data[,3])
     # data <- as.data.frame(data.frame(geoR::jitterDupCoords(data[,1:2],max=0.01),data[,3]))
     # data.ge <- geoR::as.geodata(data, coords.col = 1:2, data.col = 3, na.action = "ifany")
@@ -231,8 +244,10 @@ par.uncertainty = function(vario.mod.output, mod.nr,
                  re_estimate.means = reest.means,
                  call = c.call))
   ### print sth automatically?
+  }
 
 }
+
 
 
 
