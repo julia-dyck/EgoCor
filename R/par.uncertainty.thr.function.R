@@ -85,6 +85,7 @@ par.uncertainty.thr = function(vario.mod.output, mod.nr,
 
   }
   sample = vario.mod.output$input.arguments$data[,1:3]
+  sample = stas::na.omit(sample)
   max.dist = as.numeric(vario.mod.output$info.table[1])
   nbins = as.numeric(vario.mod.output$info.table[2]) #input nbins (not corrected ones! in case of co-locatted observations)
   emp.variance = stats::var(sample[,3])
