@@ -30,7 +30,7 @@ par.uncertainty.thr = function(vario.mod.output, mod.nr,
   B.arg <- deparse(substitute(B))
   threshold.factor.arg <- deparse(substitute(threshold.factor))
 
-  cat("Two approaches regarding the input arguments:\n 1. Provide the arguments\n    - vario.mod.output (output object from vario.mod function),\n    - mod.nr (number of the model in the vario.mod.output$infotable). \n 2. Provide the arguments\n    - par.est (vector with estimated nugget, partial sill and shape parameters),\n    - data (used to estimate the semi-variogram model parameters),\n    - max.dist (semi-variogram parameter, numeric of length 1),\n    - nbins (semi-variogram parameter, numeric of length 1).\n In both cases you can specify a threshold factor. If you don't specify it a default value of 1.2 is used.\n\n")
+  cat("Two approaches regarding the input arguments:\n 1. Provide the arguments\n    - vario.mod.output (output object from vario.mod function),\n    - mod.nr (number of the model in the vario.mod.output$infotable). \n 2. Provide the arguments\n    - par.est (vector with estimated nugget, partial sill and shape parameters),\n    - data (used to estimate the semi-variogram model parameters),\n    - max.dist (semi-variogram parameter, numeric of length 1),\n    - nbins (semi-variogram parameter, numeric of length 1).\n In both cases a threshold factor can be set. If not specified a default value of 1.2 is used.\n\n")
 
   if((missing(vario.mod.output)+missing(mod.nr)>0) & (missing(par.est))+(missing(data))+(missing(max.dist))+(missing(nbins))>0){
     stop("One approach regarding the input arguments has to be chosen.\n  and arguments have to be provided accordingly.\n")}
