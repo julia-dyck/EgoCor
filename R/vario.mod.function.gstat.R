@@ -205,9 +205,7 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
   colnames(data)[1:2] = c("x", "y")
   data.ge = data[,1:3]
   data.ge = stats::na.omit(data.ge)
-  #  data <- as.data.frame(data.frame(geoR::jitterDupCoords(data[,1:2],max=0.01),data[,3])) # was macht diese Zeile?
   sp::coordinates(data.ge) = ~x+y
-  #-> list containing [[1]]variable
   sample.var = stats::var(data.ge[[1]])
 
   #### estimate variogram
