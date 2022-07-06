@@ -1,23 +1,45 @@
-
-# par.uncertainty function with added argument "threshold.factor"
-# to tune the threshold manually
-
-
-#' Title
+#' Parameter uncertainty function with tuneable threshold factor
 #'
-#' @param vario.mod.output
-#' @param mod.nr
-#' @param par.est
-#' @param data
-#' @param max.dist
-#' @param nbins
-#' @param B
-#' @param threshold.factor
+#' This is a generalization of the \code{par.uncertainty} function.
+#' It is more general in that it has the argument \code{threshold.factor} to specify
+#' the threshold for the filter method manually.
+#' See \code{?par.uncertainty} for more details on the underlying filtered bootstrap mechanism.
+#'
+#' @param vario.mod.output An output of the \code{vario.mod} function containing the
+#'                         information of the estimated exponential semi-variogram model of interest.
+#' @param mod.nr The index number specifiying one of the exponential semi-variogram models
+#'               listed in the \code{vario.mod.ouput}.
+#' @param par.est A vector of length three containing the estimated parameters:
+#'                the nugget effect, the partial sill and the shape parameter
+#'                of the estimated exponential semi-variogram model.
+#'                It is automatically extracted from the \code{vario.mod.output}, if provided.
+#' @param data The data frame or matrix used to estimate the exponential semi-variogram of interest
+#'             containing the x-coordinates in meters in the first column,
+#'             the y-coordinates in meters in the second column and the data values in the third column.
+#'             It is automatically extracted from the vario.mod.output, if provided.
+#' @param max.dist The maximal distance used for the estimation of the
+#'                 exponential semi-variogram model of interest.
+#'                It is automatically extracted from the vario.mod.output, if provided.
+#' @param nbins The number of bins used for the estimation of the exponential
+#'              semi-variogram model of interest.
+#'              It is automatically extracted from the vario.mod.output, if provided.
+#' @param B The number of bootstrap repetitions to generate a set of re-estimates
+#'          of each parameter.
+#' @param threshold.factor The factor that specifies the threshold for the filter rule.
 #'
 #' @return
-#' @export
+#' Returns parameter estimates and corresponding standard error estimates
+#' together with a list with the following objects:
+#' \item{se}{A vector of length 3 containing the estimated standard errors of the
+#'           nugget effect, the partial sill and the shape parameter.}
+#' \item{unc.table}{A matrix containing the parameter estimates and the corresponding standard errors.}
+#' \item{re_estimates}{A matrix with B rows containing the set of bootstrap re-estimates for each parameter.}
+#' \item{re_estimate.mean}{A vector containing the mean parameter estimates based on the set of bootstrap re-estimates for each parameter.}
+#' \item{call}{The function call.}
 #'
-#' @examples
+#' @seealso par.uncertainty
+
+
 par.uncertainty.thr = function(vario.mod.output, mod.nr,
                            par.est = NULL, data= NULL, max.dist=NULL,nbins=NULL,
                            B = 1000, threshold.factor = 1.2){

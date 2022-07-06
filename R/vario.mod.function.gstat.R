@@ -203,7 +203,15 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
                 '    column 3: outcome variable \n \n',sep="\n"))
 
   colnames(data)[1:2] = c("x", "y")
+  if(sum(is.na(data[,1:3])) > 0){
+    miss.x = which(is.na(data[,1]))
+    miss.y = which(is.na(data[,2]))
+    miss.z = which(is.na(data[,3]))
+    incompl.rows = unique(c(miss.x, miss.y, miss.z))
+    nr.incompl.rows = length(incompl.rows)
+    warning(paste("Data contains", nr.incompl.rows, "rows with NAs. Rows with NAs are omitted."))}
   data.ge = data[,1:3]
+
   data.ge = stats::na.omit(data.ge)
   sp::coordinates(data.ge) = ~x+y
   sample.var = stats::var(data.ge[[1]])
