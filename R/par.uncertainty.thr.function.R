@@ -52,7 +52,7 @@ par.uncertainty.thr = function(vario.mod.output, mod.nr,
   B.arg <- deparse(substitute(B))
   threshold.factor.arg <- deparse(substitute(threshold.factor))
 
-  cat("Two approaches regarding the input arguments:\n 1. Provide the arguments\n    - vario.mod.output (output object from vario.mod function),\n    - mod.nr (number of the model in the vario.mod.output$infotable). \n 2. Provide the arguments\n    - par.est (vector with estimated nugget, partial sill and shape parameters),\n    - data (used to estimate the semi-variogram model parameters),\n    - max.dist (semi-variogram parameter, numeric of length 1),\n    - nbins (semi-variogram parameter, numeric of length 1).\n\n")
+  cat("Two approaches regarding the input arguments:\n 1. Provide the arguments\n    - vario.mod.output (output object from vario.mod function),\n    - mod.nr (number of the model in the vario.mod.output$infotable). \n 2. Provide the arguments\n    - par.est (vector with estimated nugget, partial sill and shape parameters),\n    - data (used to estimate the semi-variogram model parameters),\n    - max.dist (semi-variogram parameter, numeric of length 1),\n    - nbins (semi-variogram parameter, numeric of length 1).\n In both cases a threshold factor can be set. If not specified a default value of 1.2 is used.\n\n")
 
   if((missing(vario.mod.output)+missing(mod.nr)>0) & (missing(par.est))+(missing(data))+(missing(max.dist))+(missing(nbins))>0){
     stop("One approach regarding the input arguments has to be chosen.\n  and arguments have to be provided accordingly.\n")}
@@ -75,8 +75,6 @@ par.uncertainty.thr = function(vario.mod.output, mod.nr,
                                                                                                                           '    column 2: cartesian y-coordinates in meters',
                                                                                                                           '    column 3: outcome variable \n \n',sep="\n")))}
     data <- cbind(data[,1], data[,2], data[,3])
-    # data <- as.data.frame(data.frame(geoR::jitterDupCoords(data[,1:2],max=0.01),data[,3]))
-    # data.ge <- geoR::as.geodata(data, coords.col = 1:2, data.col = 3, na.action = "ifany")
     data.ge = as.data.frame(data)
     data.ge = stats::na.omit(data.ge)
     colnames(data.ge)[1:2] = c("x", "y")
@@ -109,6 +107,7 @@ par.uncertainty.thr = function(vario.mod.output, mod.nr,
 
   }
   sample = vario.mod.output$input.arguments$data[,1:3]
+  sample = stats::na.omit(sample)
   max.dist = as.numeric(vario.mod.output$info.table[1])
   nbins = as.numeric(vario.mod.output$info.table[2]) #input nbins (not corrected ones! in case of co-locatted observations)
   emp.variance = stats::var(sample[,3])

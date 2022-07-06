@@ -11,7 +11,8 @@ par.uncertainty(
   data = NULL,
   max.dist = NULL,
   nbins = NULL,
-  B = 1000
+  B = 1000,
+  threshold.factor = NULL
 )
 }
 \arguments{
@@ -41,6 +42,8 @@ It is automatically extracted from the vario.mod.output, if provided.}
 
 \item{B}{The number of bootstrap repetitions to generate a set of re-estimates
 of each parameter.}
+
+\item{threshold.factor}{If not specified a default value of 1.2 is used.}
 }
 \value{
 Returns parameter estimates and corresponding standard error estimates

@@ -32,6 +32,8 @@
 coords.plot <- function(data){
   #### necessary packages
   # graphics
+  
+  ### message about required data format
   if(ncol(data)>3){warning('Data matrix contains more than 3 columns. Are the columns in correct order?\n')}
   message(paste('Message:',
                 'Input data interpretation:',
@@ -39,14 +41,7 @@ coords.plot <- function(data){
                 '    column 2: Cartesian y-coordinates in meters',
                 '    column 3: outcome variable \n \n',sep="\n"))
 
-  # formatting of the data
-  # data <- as.data.frame(data)
-  # data <- as.data.frame(data.frame(geoR::jitterDupCoords(data[,1:2],max=0.01),data[,3]))
-  # data.ge = data
-  # data.ge <- geoR::as.geodata(data, coords.col = 1:2, data.col = 3, na.action = "ifany")
-  # colnames(data.ge)[1:2] = c("x", "y")
-  # sp::coordinates(data.ge) = ~x+y
-  #-> list containing [[1]] variable and coordinates
+  ### delete rows with incomplete coordinates
   if(sum(is.na(data[,1:2])) > 0){
     ind.missing.x = which(is.na(data[,1]))
     ind.missing.y = which(is.na(data[,2]))
@@ -56,7 +51,6 @@ coords.plot <- function(data){
                   "rows with missing coordinates. Rows with incomplete coordinates are ignored."))
     data = data[-ind.incompl.coords,]
   }
-
   ### visualization of the coordinates
   x.range = c(min(data[,1]), max(data[,1]))
   y.range = c(min(data[,2]), max(data[,2]))
