@@ -2,10 +2,11 @@
 #'
 #' Semi-variogram modeling function
 #'
-#' Based on the \code{gstat} functions \code{variogram}, \code{vvgm} and \code{fit.variogram}, the function fits one
-#' or multiple exponential empirical semi-variograms based on provided maximal distances and number of bins.
-#' All estimated parameter values are saved in a single table.
-#' Graphics of all models can be observed in a shiny application output (default)
+#' The function allows for user friendly exponential semi-variogram model fitting to data.
+#' Based on the \code{gstat} function \code{variogram}, \code{vgm} and \code{fit.variogram}, the function fits one
+#' or multiple exponential semi-variogram models given one or multiple maximal distances and number of bins.
+#' All estimated model parameters are summarized in an information table.
+#' Graphics of all models can be observed in a shiny application output
 #' or in several plot windows, one for each empirical semi-variogram.
 #' Additionally, a pdf file including all the figures can be
 #' saved in a specified working directory.
@@ -14,13 +15,13 @@
 #' @param data A data frame or matrix containing the x-coordinates  in the first column,
 #'        the y-coordinates  in the second column (by default in meters)
 #'        and the data values in the third column.
-#'        The data set may contain more attributes in further columns. In this case, a warning is provided.
+#'        The dataset may contain more attributes in further columns. In this case, a warning is provided.
 #'        All columns beyond the third one are ignored.
-#' @param max.dist An optional numeric argument; the default is the following maximal distance vector \code{c(2000,1500,1000,750,500,250)}.
+#' @param max.dist An optional numeric argument; the default is the vector \code{c(2000,1500,1000,750,500,250)}.
 #'        Either a scalar or vector containing the maximal distances can be inserted. If a vector is
 #'        provided, the \code{ nbins} argument must be either a scalar or a vector of the same length.
 #' @param nbins  An optional argument; the default is 13 bins for all empirical semi-variograms to be estimated.
-#'        Either a scalar or vector containing the number of bins considered. If a vector is
+#'        Either a scalar or vector containing the number of bins can be inserted. If a vector is
 #'        provided, the \code{max.dist} argument must be either a scalar or a vector of the same length.
 #' @param shinyresults A logical argument; by default TRUE. If \code{shinyresults = T},
 #'        the information table and graphics of
@@ -52,8 +53,10 @@
 #'       specifications for the pdf-output, \code{$pdf}, \code{$pdf.directory} and \code{$pdf.name}.}
 #' \item{call}{Contains the call of the function.}
 #'
-#' The models are visualized in an automatically opened shiny application if \code{shinyresults = T}. It is to be noticed,
-#' that in this case, the output of the \code{vario.mod} function is not saved in the environment, even with a variable name assigned.
+#' The models are visualized in an automatically opened shiny application if \code{shinyresults = T}. Beware
+#' that in this case the output of the \code{vario.mod} function is not saved in the environment, even with a variable name assigned.
+#' In order to save the output, set \code{shinyresults = F}.
+#'
 #' If the argument \code{windowplots = T}, one or multiple graphics of the estimated
 #' empirical semi-variograms and semi-variogram models are plotted in the R environment.
 #' If the argument \code{pdf = T}, a pdf file containing the same figures is saved in the manually
@@ -66,7 +69,7 @@
 #'          estimation. Data pairs that are separated by a higher distance are excluded.
 #'
 #'          \code{nbins}: the interval (0, \code{max.dist}] is separated into \code{nbins} equidistant
-#'          lag bins or intervals, respectively. Each pairwise distance can then be assigned to one of the
+#'          lag bins or intervals, respectively. Each pairwise distance is then assigned to one of the
 #'          bins. The point pair subsets \eqn{N(h_k) := \{(\mathbf{s_i}, \mathbf{s_j}) \in D |\;\; ||\mathbf{s_i}-\mathbf{s_j}|| \in Bin_k\}}
 #'          are defined
 #'          and a point estimate of the semi-variogram is estimated for each \eqn{Bin_k} for \eqn{k =1,...}\code{nbins}.
@@ -154,11 +157,11 @@
 #'}
 #'
 #'
-#' @seealso \code{variogram} in the \code{gstat} package for further information on the arguments \code{max.dist} and \code{nbins} as well as on
-#'          the estimation of the empirical semi-variogram itself;
+#' @seealso \code{variogram} in the \code{gstat} package for further information on
+#'          the estimation of the empirical semi-variogram;
 #'
-#'          \code{fit.variogram} in the \code{gstat} package for further information on the default settings
-#'          when estimating the exponential semi-variogram model.
+#'          \code{fit.variogram} and \code{vgm} in the \code{gstat} package for further information on the default settings
+#'          when fitting an exponential semi-variogram model to an empirical semi-variogram.
 #'
 #'
 #'

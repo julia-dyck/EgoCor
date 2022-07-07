@@ -43,11 +43,12 @@ It is automatically extracted from the vario.mod.output, if provided.}
 \item{B}{The number of bootstrap repetitions to generate a set of re-estimates
 of each parameter.}
 
-\item{threshold.factor}{If not specified a default value of 1.2 is used.}
+\item{threshold.factor}{The threshold factor specifies the filter within the filtered
+bootstrap method (see details). If not specified, a default value of 1.2 is used.}
 }
 \value{
-Returns parameter estimates and corresponding standard error estimates
-together with a list with the following objects:
+The function returns parameter estimates and corresponding standard error estimates
+together and provides a list with the following objects:
 \item{se}{A vector of length 3 containing the estimated standard errors of the
           nugget effect, the partial sill and the shape parameter.}
 \item{unc.table}{A matrix containing the parameter estimates and the corresponding standard errors.}
@@ -66,16 +67,16 @@ shape parameter \eqn{\phi} of a fitted exponential semi-variogram model.
          vario.mod.output (output object from vario.mod function) and
          mod.nr (number of the model in the infotable).
 
-         2. Provide the arguments manually, namely
-         par.est (vector with estimated nugget, partial sill and shape parameters),
-         data (used to estimate the semi-variogram model parameters),
-         max.dist (semi-variogram parameter, numeric of length 1) and
-         nbins (semi-variogram parameter, numeric of length 1).
+         2. Provide the necessary information manually, namely
+         \code{par.est} (vector with estimated nugget, partial sill and shape parameters),
+         \code{data} (used to estimate the semi-variogram model parameters),
+         \code{max.dist} (semi-variogram parameter, numeric of length 1) and
+         \code{nbins} (semi-variogram parameter, numeric of length 1).
 
 
          \strong{Filtered bootstrap method}:
 
-         For the semi-variogram model parameter estimation, the weighed least squares method is used
+         For the semi-variogram model parameter estimation, the weighted least squares method is used
          in order to make the numerical calculation possible for large sample sizes.
          A filter is set up within the bootstrapping process to remove all
          bootstrap estimates for which the estimation algorithm for the semi-variogram
@@ -92,12 +93,12 @@ shape parameter \eqn{\phi} of a fitted exponential semi-variogram model.
          Within the bootstrap repetitions, a test is performed to check whether
          the estimated parameters lie within a probable range.
          If the total variance of the bootstrap model exceeds the empirical variance
-         of the data times the treshold factor \eqn{\tau = 1.2}, ie.
+         of the data times the treshold factor \eqn{\tau}, ie.
          \deqn{c_{0 b}^* + \sigma_{0 b}^{2*} > \tau  \widehat{Var(\mathbf{z})}}
          for the bth bootstrap estimate, it is discarded. Otherwise, it is saved.
          This procedure is performed until B bootstrap estimates have aggregated.
-         Based on the latter, the standard error for the nugget effect, partial sill
-         and shape parameter are each estimated by the empirical standard deviation.
+         The empirical standard deviation calculated from the bootstrap estimates provides the
+         uncertainty estimate for each parameter.
 
          Details about the algorithm used to obtain standard errors for the parameters
          of the exponential semi-variogram model are provided in \insertCite{dyck_sv_ses;textual}{EgoCor}.

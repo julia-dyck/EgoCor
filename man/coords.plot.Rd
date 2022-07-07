@@ -15,7 +15,7 @@ Additional columns are ignored.}
 }
 \value{
 The function returns a plot showing the points based on Cartesian coordinates. A black circle indicates that the
-        variable of interest is observed at that location and a red cross flags a missing value.
+        variable of interest is observed at that location. A red cross flags a missing value.
 }
 \description{
 Plot of the Cartesian coordinates of study participant with color and shape coded
