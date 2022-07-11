@@ -25,7 +25,7 @@ With the R package EgoCor modelling the spatial correlation structure of health 
 
 ## Statistical background
 
-For more background on semi-variogram modelling we refer to (Schabenberger O, Gotway CA. Statistical methods for spatial data analysis. CRC press; 2017.). Here we provide only some basic concepts. In the sequel, we assume that the correlation between two points depends only on the distance between two points (the spatial process is isotropic and second-order stationary). Under those conditions (see (Schabenberger O, Gotway CA. Statistical methods for spatial data analysis. CRC press; 2017.)), the correlation C(h) between a health outcomes Z(s) and Z(s′) (or the residuals of a regression model) at locations s and s′ tdepends only on the (lag) distance h = ||s′ − s|| between the two observations.
+Please find more detailed information about our method [here](https://arxiv.org/abs/2202.05752)
 
 
 ## Data
@@ -45,12 +45,50 @@ The simulated dataset birth is provided with the package EgoCor. The dataset is 
 
 We use this dataset to illustrate the following functions:
 
-### vario.mod
+1. coords.plot(): for graphical description of locations;
+2. distance.info(): for descriptive information about distances between observations;
+3. vario.reg.prep(): to model the spatial correlation structure of residuals of a regression model;
+4. vario.mod(): to fit exponential models to semi-variograms with graphical presentation;
+5. par.uncertainty(): to obtain bootstrap standard errors for the parameters of the exponential semi-variogram model.
 
-This function can provide 3 types of output. The default setting is 'shinyresults = TRUE' therefore an interactive shiny application is opened to present the results. This contains a plot of the semivariogram, the parameter estimates, as well as additional information. This cannot be included in this vignette. Therefore from here on we set 'shinyresults = FALSE'
 
-```{r}
-mod = vario.mod(birth, shinyresults = FALSE)
+### 1. coords.plot()
+
+The first three columns of the data frame or matrix should be ordered the following way:
+1st column: x-coordinate in meters for a Cartesian coordinate system; 2nd column: y- coordinate in meters for a Cartesian coordinate system; 3rd column: outcome of interest. Other columns will be ignored.
+
+The function coords.plot() provides a simple visualization of the locations on a two dimen- sional map and indicates, whether the outcome is observed (by a black circle) or missing (by a red x) at a specific location.
+
+```{r fig1, fig.height = 4.5, fig.width = 6, fig.align = "center"}
+coords.plot(data = birth)
+```
+The purpose of this function is to look at the spatial distribution of observations and if there might be a spatial pattern in the distribution of missing values in the outcome of interest or in covariates.
+
+### 3. distance.info()
+
+This function provides further information about the distribution of pairwise Euclidean distances. It displays the following descriptive statistics:
+* a histogram of Euclidean distances;
+* minimum, 1st quartile, median, mean, 3rd quartile and maximum.
+
+```{r fig2, fig.height = 4.5, fig.width = 6, fig.align = "center"}
+distance.info(birth)
+```
+
+
+### 4. vario.mod
+
+\code{test}
+
+The function vario.mod() enables the simultaneous output of multiple exponential semi- variogram models fitted for a range of maximal distances and a number of bins. Thereby, the focus lies on the ability of the function to provide multiple estimation results depending on various specifications for the meta parameters max.dist and nbins.
+
+When in the default setting (shinyresults = TRUE) an interactive shiny application is opened automatically that displays the results. For the purpose of this vignette though, we will set 'shinyresults = FALSE' and 'windowplots = TRUE'.
+
+The chosen maximal distance value specifies the subset of data pairs that are actually used within the semi-variogram estimation. Only data pairs with an Euclidean distance ≤ max.dist are taken into account.
+
+For a first exploration, it might be useful to try a range of maximal distances to locate where the range might be situated:
+
+```{r fig3, fig.height = 4.5, fig.width = 6, fig.align = "center"}
+mod = vario.mod(birth, max.dist = c(1000,800,600), shinyresults = FALSE, windowplots = TRUE)
 ```
 You can get the estimated parameters later by
 ```{r}
@@ -60,7 +98,7 @@ mod$infotable
 ### par.uncertainty
 
 ```{r, warning = FALSE}
-par.uncertainty(mod, mod.nr = 1)
+par.uncertainty(mod, mod.nr = 1, B = 10)
 ```
 
 
