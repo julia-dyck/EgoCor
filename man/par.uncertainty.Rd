@@ -12,7 +12,7 @@ par.uncertainty(
   max.dist = NULL,
   nbins = NULL,
   B = 1000,
-  threshold.factor = NULL
+  threshold.factor = 1.2
 )
 }
 \arguments{
