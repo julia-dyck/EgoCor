@@ -1,0 +1,35 @@
+---
+title: "Introduction to EgoCor"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to EgoCor}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(EgoCor)
+```
+
+This is an introduction to the package EgoCor.
+
+## Functions
+
+### vario.mod
+
+```{r}
+mod = vario.mod(birth, shinyresults = FALSE)
+```
+You can get the estimated parameters later by
+```{r}
+mod$infotable
+```
+
+
