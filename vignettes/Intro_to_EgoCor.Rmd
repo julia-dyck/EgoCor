@@ -9,6 +9,8 @@ vignette: >
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
   collapse = TRUE,
   comment = "#>"
 )
@@ -18,11 +20,34 @@ knitr::opts_chunk$set(
 library(EgoCor)
 ```
 
-This is an introduction to the package EgoCor.
+This is an introduction to the package EgoCor which offers a user friendly interface displaying in one function a range of graphics and tables of parameters to facilitate the decision making about which exponential parameters fit either raw data or residuals best. This function is based on the functions of the R package gstat. A further function providing the measure of uncertainty proposed by Dyck and Sauzet has been implemented in the package.
+With the R package EgoCor modelling the spatial correlation structure of health outcome with a measure of uncertainly is made available to non specialists
+
+## Statistical background
+
+For more background on semi-variogram modelling we refer to (Schabenberger O, Gotway CA. Statistical methods for spatial data analysis. CRC press; 2017.). Here we provide only some basic concepts. In the sequel, we assume that the correlation between two points depends only on the distance between two points (the spatial process is isotropic and second-order stationary). Under those conditions (see (Schabenberger O, Gotway CA. Statistical methods for spatial data analysis. CRC press; 2017.)), the correlation C(h) between a health outcomes Z(s) and Z(s′) (or the residuals of a regression model) at locations s and s′ tdepends only on the (lag) distance h = ||s′ − s|| between the two observations.
+
+
+## Data
+
+The simulated dataset birth is provided with the package EgoCor. The dataset is based on the spatial distribution of real birthweight data. It contains eight variables for 903 births:
+
+* x: x-coordinate in meters for a fictive Cartesian coordinate system; 
+* y: y-coordinate in meters;
+* birthweight: birthweight in gram;
+* primiparous : first pregnancy (1) or subsequent pregnancy (0);
+* datediff: number of days to due date;
+* bmi: BMI of the mother at first medical appointment;
+* weight: weight of the mother at first medical appointment; 
+* inc: income quintile.
 
 ## Functions
 
+We use this dataset to illustrate the following functions:
+
 ### vario.mod
+
+This function can provide 3 types of output. The default setting is 'shinyresults = TRUE' therefore an interactive shiny application is opened to present the results. This contains a plot of the semivariogram, the parameter estimates, as well as additional information. This cannot be included in this vignette. Therefore from here on we set 'shinyresults = FALSE'
 
 ```{r}
 mod = vario.mod(birth, shinyresults = FALSE)
@@ -30,6 +55,12 @@ mod = vario.mod(birth, shinyresults = FALSE)
 You can get the estimated parameters later by
 ```{r}
 mod$infotable
+```
+
+### par.uncertainty
+
+```{r, warning = FALSE}
+par.uncertainty(mod, mod.nr = 1)
 ```
 
 
