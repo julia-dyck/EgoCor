@@ -13,6 +13,7 @@ You can install the development version of the EgoCor package from [GitHub](http
 
     # install.packages("devtools") # if not installed, yet
     # remove.packages("EgoCor")    # if an old version of the package is installed
+    
     devtools::install_github(repo = "julia-dyck/EgoCor")
     library(EgoCor)
     
