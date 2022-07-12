@@ -65,6 +65,7 @@ bootstrap.unc.check = function(sample, max.dist, nbins, B = 1000, thr=c(1.1,1.5,
                      threshold=thr))
   par.est = stats::na.omit(par.est)
   nr_reestimates = length(stats::na.omit(par.est[,1]))
+
   while(nr_reestimates < B){
     next.est = one_resample_analysis_check(platzhalter=NULL, y.iid=y.iid, L=L,
                                            nscore.obj=nscore.obj, coords=coords,
@@ -75,6 +76,10 @@ bootstrap.unc.check = function(sample, max.dist, nbins, B = 1000, thr=c(1.1,1.5,
     else{
       par.est = rbind(par.est, next.est)
       nr_reestimates= nr_reestimates + 1
+    }
+
+    if (nr_reestimates %% 50 == 0){
+      print(paste("Bootstrap sample", nr_reestimates, "of", B))
     }
   }
   # evaluating the sds of the parameter estimates
