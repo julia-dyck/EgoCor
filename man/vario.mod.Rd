@@ -114,11 +114,15 @@ saved in a specified working directory.
          \deqn{\gamma_{exp}(h) =  c_0 + \sigma_0^2 \Big\{1 - \exp\big(- \frac{h}{\phi}\big)\Big\}}
          for \eqn{h > 0}
          is fitted using the \code{vgm} and \code{fit.variogram} function from package \code{gstat} via
-         weighted least squares estimation.
+         weighted least squares estimation. The weights have the form
+         \eqn{ w_k = \vert N(h_k) \vert / h_k^2} specified by the \code{fit.method = 7} argument
+         within the \code{fit.variogram} function.
+
          For the numerical optimization, starting values for the model parameters have to be provided.
          The initial value for the partial sill \eqn{\sigma_0^2} equals the empirical variance of
          the observations. The starting value for the nugget effect \eqn{c_0} is set to zero.
          The initial value for the shape parameter \eqn{\phi} is set as \code{max.dist} divided by 3.
+
 
 
          \strong{Result statistics:}
