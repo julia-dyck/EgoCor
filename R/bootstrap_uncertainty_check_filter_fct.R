@@ -77,10 +77,6 @@ bootstrap.unc.check = function(sample, max.dist, nbins, B = 1000, thr=c(1.1,1.5,
       par.est = rbind(par.est, next.est)
       nr_reestimates= nr_reestimates + 1
     }
-
-    if (nr_reestimates %% 50 == 0){
-      print(paste("Bootstrap sample", nr_reestimates, "of", B))
-    }
   }
   # evaluating the sds of the parameter estimates
   nr.thr = length(thr)
