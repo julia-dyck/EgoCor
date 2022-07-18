@@ -1,3 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^\.github$
+^.*\.pdf$
+manual_creation_for_RPackages.R

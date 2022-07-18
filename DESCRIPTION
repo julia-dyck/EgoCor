@@ -1,32 +1,44 @@
-Package: EgoCor
 Type: Package
+Package: EgoCor
 Title: Simple Presentation of Estimated Exponential Semi-Variograms
 Version: 1.0.0
-Authors@R: c(person("Julia", "Dyck", role = c("aut", "cre"), email = "j.dyck@uni-bielefeld.de"),
-             person("Odile", "Sauzet", role = "aut"),
-             person("Jan-Ole", "Koslik", role = "aut"))
-Description: User friendly interface based on the R package 'gstat' to fit exponential parametric models to empirical semi-variograms in order to model the spatial correlation structure of health data. Geo-located health outcomes of survey participants may be used to model spatial effects on health in an ego-centred approach. 
-  The package contains a range of functions to help explore the spatial structure of the data as well as visualize the fit of exponential models for various metaparameter combinations with respect to the number of lag intervals and maximal distance.
-  Furthermore, the outcome of interest can be adjusted for covariates by fitting a linear regression in a preliminary step before the semi-variogram fitting process.
+Authors@R: c(
+    person("Julia", "Dyck", , "j.dyck@uni-bielefeld.de", role = c("aut", "cre")),
+    person("Odile", "Sauzet", role = "aut"),
+    person("Jan-Ole", "Koslik", role = "aut")
+  )
+Description: User friendly interface based on the R package 'gstat' to fit
+    exponential parametric models to empirical semi-variograms in order to
+    model the spatial correlation structure of health data. Geo-located
+    health outcomes of survey participants may be used to model spatial
+    effects on health in an ego-centred approach.  The package contains a
+    range of functions to help explore the spatial structure of the data
+    as well as visualize the fit of exponential models for various
+    metaparameter combinations with respect to the number of lag intervals
+    and maximal distance.  Furthermore, the outcome of interest can be
+    adjusted for covariates by fitting a linear regression in a
+    preliminary step before the semi-variogram fitting process.
 License: MIT + file LICENSE
-Depends: R (>= 3.5.0)
-Encoding: UTF-8
-LazyData: true
-RoxygenNote: 7.1.2
-Imports: 
-    SpatialTools,
-    stats,
-    grDevices,
-    graphics,
-    shiny,
-    Rdpack,
-    gstat,
-    sp
-RdMacros: Rdpack
-Suggests:
-    knitr,
-    rmarkdown,
-    lme4
-VignetteBuilder: knitr
 URL: https://github.com/julia-dyck/EgoCor
 BugReports: https://github.com/julia-dyck/EgoCor/issues
+Depends: 
+    R (>= 3.5.0)
+Imports: 
+    graphics,
+    grDevices,
+    gstat,
+    Rdpack,
+    shiny,
+    sp,
+    SpatialTools,
+    stats
+Suggests:
+    knitr,
+    rmarkdown
+VignetteBuilder: 
+    knitr
+RdMacros: 
+    Rdpack
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.0

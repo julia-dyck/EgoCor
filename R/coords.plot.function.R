@@ -11,7 +11,7 @@
 #'
 #' @return
 #' The function returns a plot showing the points based on Cartesian coordinates. A black circle indicates that the
-#'         variable of interest is observed at that location and a red cross flags a missing value.
+#'         variable of interest is observed at that location. A red cross flags a missing value.
 #'
 #'
 #'
@@ -32,7 +32,7 @@
 coords.plot <- function(data){
   #### necessary packages
   # graphics
-  
+
   ### message about required data format
   if(ncol(data)>3){warning('Data matrix contains more than 3 columns. Are the columns in correct order?\n')}
   message(paste('Message:',

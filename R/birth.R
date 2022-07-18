@@ -2,7 +2,7 @@
 #'
 #' A simulated dataset containing geo-coded birthweight data with covariates.
 #' It is provided for exemplary applications of the functions
-#' from the R package EgoCor.
+#' within the EgoCor package.
 #'
 #'
 #' @format  A data frame with 903 rows and 8 variables:
@@ -14,7 +14,7 @@
 #'   \item{datediff}{difference between due date and birth,}
 #'   \item{bmi}{BMI (body mass index) of the mother at the beginning of pregnancy,}
 #'   \item{weight}{weight of the mother in kg,}
-#'   \item{inc}{income quintiles 0 (low),1,2,3,4 (high).}
+#'   \item{inc}{income quintiles 0 (low), 1, 2, 3, 4 (high).}
 #'}
 #'
 #' @details The dataset is loosely based on the BaBi study dataset
