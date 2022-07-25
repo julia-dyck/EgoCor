@@ -165,7 +165,7 @@ par.uncertainty = function(vario.mod.output, mod.nr,
     vario.mod.output$input.arguments = list(data = data, max.dist = max.dist)
     vario.mod.output$info.table = c(max.dist = max.dist, nbins = nbins,
                                     nugget = par.est[1], partial.sill = par.est[2], shape = par.est[3],
-                                    prac.range = NA, RSV =NA, rel.bias = NA)
+                                    prac.range = NA, RSV = NA, rel.bias = NA)
   }
   else{# 1. approach:
     # insert the vario.mod.output and specify the model to estimate
@@ -176,7 +176,7 @@ par.uncertainty = function(vario.mod.output, mod.nr,
 
     if(!class(vario.mod.output) == "vario.mod.output"){stop("Argument vario.mod.output has to be an output of the vario.mod()-function.") }
     if(!is.numeric(mod.nr)|| length(mod.nr)>1){stop("Argument mod.nr has to be a numeric of length 1.\n")}
-
+# durch is() oder inherits() ersetzen
     vario.mod.output$info.table = vario.mod.output$infotable[mod.nr,]
     par.est = as.numeric(c(vario.mod.output$info.table$nugget,
                            vario.mod.output$info.table$partial.sill,
