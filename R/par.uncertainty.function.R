@@ -142,8 +142,8 @@ par.uncertainty = function(vario.mod.output, mod.nr,
     if(missing(max.dist)){stop("Argument max.dist has to be provided.\n")}
     if(missing(nbins)){stop("Argument nbins has to be provided.\n")}
 
-    if(!(class(par.est)=="numeric") || !(length(par.est)==3)){stop("Argument par.est has to be a numeric vector of length 3 containing the nugget effect,\n partial sill and shape of the exponential semi-variogram model.")}
-    if(!((class(data)=="data.frame")||(class(data)=="matrix"))){stop("Argument data has to be a matrix or data frame with\n the x-coordinates in the first column,\n the y-coordinates in the second column\n and the attribute values of interest in the third column. \n It is required to be the same dataset used for the\n estimation of the semi-variogram model of interest.")}
+    if(!(is.numeric(par.est)) || !(length(par.est)==3)){stop("Argument par.est has to be a numeric vector of length 3 containing the nugget effect,\n partial sill and shape of the exponential semi-variogram model.")}
+    if(!((is.data.frame(data))||(is.matrix(data)))){stop("Argument data has to be a matrix or data frame with\n the x-coordinates in the first column,\n the y-coordinates in the second column\n and the attribute values of interest in the third column. \n It is required to be the same dataset used for the\n estimation of the semi-variogram model of interest.")}
 
     #### data input: formatting
     if(ncol(data)<3){stop("Data matrix contains less than 3 columns. It must contain\n the x-coordinates in the first column,\n the y-coordinates in the second column\n and the attribute values of interest in the third column. \n")}
@@ -157,8 +157,8 @@ par.uncertainty = function(vario.mod.output, mod.nr,
     colnames(data.ge)[1:2] = c("x", "y")
     sp::coordinates(data.ge) = ~x+y
 
-    if(!(class(max.dist)=="numeric") || !(length(max.dist)==1)){stop("Argument max.dist has to be a numeric of length 1.")}
-    if(!((class(nbins)=="numeric")||(class(nbins)=="integer")) || !(length(nbins)==1)){stop("Argument nbins has to be a numeric of length 1.")}
+    if(!(is.numeric(max.dist)) || !(length(max.dist)==1)){stop("Argument max.dist has to be a numeric of length 1.")}
+    if(!((is.numeric(nbins))||(is.integer(nbins))) || !(length(nbins)==1)){stop("Argument nbins has to be a numeric of length 1.")}
 
 
     vario.mod.output = list()
@@ -174,7 +174,7 @@ par.uncertainty = function(vario.mod.output, mod.nr,
     if(missing(vario.mod.output)){stop("Argument vario.mod.output has to be provided.\n")}
     if(missing(mod.nr)){stop("Argument mod.nr has to be provided.\n")}
 
-    if(!class(vario.mod.output) == "vario.mod.output"){stop("Argument vario.mod.output has to be an output of the vario.mod()-function.") }
+    if(!inherits(vario.mod.output,"vario.mod.output")){stop("Argument vario.mod.output has to be an output of the vario.mod()-function.") }
     if(!is.numeric(mod.nr)|| length(mod.nr)>1){stop("Argument mod.nr has to be a numeric of length 1.\n")}
 
     vario.mod.output$info.table = vario.mod.output$infotable[mod.nr,]
@@ -191,6 +191,7 @@ par.uncertainty = function(vario.mod.output, mod.nr,
   # check whether the inserted sv model seems probable:
   tau = threshold.factor
   if(par.est[1]+par.est[2] > tau*emp.variance){warning("The overall variance according to the estimated semi-variogram model does not represent\n the empirical variance of the data well.\n Please check whether the semi-variogram model is appropriate before using the\n parameter and uncertainty estimates.")}
+  if(par.est[3] < 0){warning("The shape parameter phi according to the estimated semi-variogram model is < 0.\n Please check whether the semi-variogram model is appropriate before using the\n parameter and uncertainty estimates.")}
 
 
 
