@@ -28,6 +28,6 @@ You can install the development version of the EgoCor package from [GitHub](http
    
 ## Documentation
 
-Take a look at the vignette with:
+Take a look at the vignette "Introduction to EgoCor" with:
 
     browseVignettes("EgoCor")
