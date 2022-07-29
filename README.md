@@ -23,6 +23,11 @@ You can install the development version of the EgoCor package from [GitHub](http
 
     # install.packages("devtools") # if not installed, yet
     # remove.packages("EgoCor")    # if an old version of the package is installed
-    devtools::install_github(repo = "julia-dyck/EgoCor")
+    devtools::install_github(repo = "julia-dyck/EgoCor", build_vignettes = TRUE)
     library(EgoCor)
-    
+   
+## Documentation
+
+Take a look at the vignette with:
+
+    browseVignettes("EgoCor")
