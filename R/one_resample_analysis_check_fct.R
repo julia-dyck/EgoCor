@@ -19,13 +19,15 @@ one_resample_analysis_check = function(platzhalter, y.iid, L, nscore.obj, coords
   emp.var = stats::var(resmpl)
   mod.var = wls.est[1] + wls.est[2]
 
-  ## check, whether estimated by the model (c_0+sigma_sq) exceeds
-  # the empirical variance*factor
+  ## check, whether
+  # ## 1. variance estimated by the model (c_0+sigma_sq) exceeds
+  #       the empirical variance*factor OR
+  # ## 2. re_estimated shape parameter phi < 0 (<- actually happens in model fitting!)
   # applied factors and nr of factors according to input argument "threshold"
   nr.thr = length(threshold)
   wls.threshold.outcomes = numeric(length = 3*nr.thr)
   for(i in 1:nr.thr){
-    if(mod.var > threshold[i]*emp.var){
+    if(mod.var > threshold[i]*emp.var | wls.est[3] < 0){
       wls.threshold.outcomes[(i-1)*3+(1:3)] = rep(NA, 3)
     }
     else{

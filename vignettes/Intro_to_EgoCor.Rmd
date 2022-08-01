@@ -1,6 +1,7 @@
 ---
 title: "Introduction to EgoCor"
 output: rmarkdown::html_vignette
+bibliography: REFERENCES.bib
 vignette: >
   %\VignetteIndexEntry{Introduction to EgoCor}
   %\VignetteEngine{knitr::rmarkdown}
@@ -20,12 +21,12 @@ knitr::opts_chunk$set(
 library(EgoCor)
 ```
 
-This is an introduction to the package EgoCor which offers a user friendly interface displaying in one function a range of graphics and tables of parameters to facilitate the decision making about which exponential parameters fit either raw data or residuals best. This function is based on the functions of the R package gstat. A further function providing the measure of uncertainty proposed by Dyck and Sauzet has been implemented in the package.
+This is an introduction to the package EgoCor. EgoCor offers a user friendly interface displaying by using one function a range of graphics and tables of parameters to facilitate the decision making about which exponential parameters fit either raw data or residuals best. This function is based on the functions of the R package [gstat](https://cran.r-project.org/web/packages/gstat/index.html). A further function providing the measure of uncertainty proposed by @dyck_sv_ses has been implemented in the package.
 With the R package EgoCor modelling the spatial correlation structure of health outcome with a measure of uncertainly is made available to non specialists.
 
 ## Statistical background
 
-Please find more detailed information about our method [here](https://arxiv.org/abs/2202.05752)
+Please find more detailed information about the used statistical methods in [@dyck_sv_ses](https://arxiv.org/abs/2202.05752).
 
 ## Data
 
@@ -38,7 +39,7 @@ The simulated dataset birth is provided with the package EgoCor. The dataset is 
 * datediff: number of days to due date;
 * bmi: BMI of the mother at first medical appointment;
 * weight: weight of the mother at first medical appointment; 
-* inc: income quintile.
+* inc: income quintile (0, 1, 2, 3, 4).
 
 ```{r}
 head(birth)
@@ -55,13 +56,15 @@ We use this dataset to illustrate the following functions:
 4. `vario.reg.prep()`: to model the spatial correlation structure of residuals of a regression model;
 5. `par.uncertainty()`: to obtain bootstrap standard errors for the parameters of the exponential semi-variogram model.
 
+While detailed information can be retrieved with `help(function.name)`, a presentation and demonstration of all functions is provided in the following sections.
+
 
 ### 1. coords.plot()
 
 The first three columns of the data frame or matrix should be ordered the following way:
 1st column: x-coordinate in meters for a Cartesian coordinate system; 2nd column: y-coordinate in meters for a Cartesian coordinate system; 3rd column: outcome of interest. Other columns will be ignored.
 
-The function `coords.plot()` provides a simple visualization of the locations on a two dimensional map and indicates, whether the outcome is observed (by a black circle) or missing (by a red x) at a specific location.
+The function `coords.plot()` provides a simple visualization of the locations on a two dimensional map and indicates whether the outcome is observed (by a black circle) or missing (by a red x) at a specific location.
 The purpose of this function is to look at the spatial distribution of observations and if there might be a spatial pattern in the distribution of missing values in the outcome of interest or in covariates.
 
 ```{r fig1, fig.height = 4.5, fig.width = 6, fig.align = "center"}
@@ -71,11 +74,13 @@ coords.plot(birth)
 ### 2. distance.info()
 
 This function provides further information about the distribution of pairwise Euclidean distances. It displays the following descriptive statistics:
+
 * a histogram of Euclidean distances;
 * minimum, 1st quartile, median, mean, 3rd quartile and maximum.
 
 ```{r fig2, fig.height = 4.5, fig.width = 6, fig.align = "center"}
 distance.info(birth)
+
 ```
 From all the 815 409 pairwise distances, 30 570 are of less than 2 000 meters and will be used for modelling of the local spatial correlation structure.
 
@@ -119,9 +124,9 @@ The results point towards a reduced spatial correlation structure with a maximal
 
 ### 5. par.uncertainty()
 
-This function provides the filtered bootstrap standard errors for all three exponential model parameters. As the bootstrap can take some time, it is not called by the function `vario.mod()` directly so that the bootstrap is not executed in all model estimated by `par.uncertainty()`. This is left to the choice of the user by selecting the model number in the option `mod.nr`, thus saving execution time.
+This function provides the filtered bootstrap standard errors for all three exponential model parameters. As the bootstrap can take some time, it is not called by the function `vario.mod()` directly so that the bootstrap is not executed in all models estimated by `par.uncertainty()`. This is left to the choice of the user by selecting the model number in the option `mod.nr`, thus saving execution time.
 The main output of this function is a table with parameter estimates and standard errors for all three parameters of the estimated model chosen by specifying `mod.nr`.
-The user can either provide the model estimated by `vario.mod()` and a model number that specifies which one to use or provide the parameter estimates, the data, the maximum distance and number of bins seperately. The first option is more convenient, therefore we chose it here.
+The user can either provide a model estimated by `vario.mod()` and a model number that specifies which one to use or provide the parameter estimates, the data, the maximum distance and number of bins seperately. The first option is more convenient, therefore we chose it here. The second option enables standard error estimation for exponential semi-variogram models for which no result of class `"vario.mod.output"` is available. 
 It is recommended to use more bootstrap samples than done here.
 
 ```{r, warning = FALSE}
