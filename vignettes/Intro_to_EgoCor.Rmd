@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 library(EgoCor)
 ```
 
-This is an introduction to the package EgoCor. EgoCor offers a user friendly interface displaying by using one function a range of graphics and tables of parameters to facilitate the decision making about which exponential parameters fit either raw data or residuals best. This function is based on the functions of the R package [gstat](https://cran.r-project.org/web/packages/gstat/index.html). A further function providing the measure of uncertainty proposed by @dyck_sv_ses has been implemented in the package.
+This is an introduction to the package EgoCor. EgoCor offers a user friendly interface displaying by using one function a range of graphics and tables of parameters to facilitate the decision making about which exponential parameters fit either raw data or residuals best. This function is based on the functions of the R package [gstat](https://CRAN.R-project.org/package=gstat). A further function providing the measure of uncertainty proposed by @dyck_sv_ses has been implemented in the package.
 With the R package EgoCor modelling the spatial correlation structure of health outcome with a measure of uncertainly is made available to non specialists.
 
 ## Statistical background
