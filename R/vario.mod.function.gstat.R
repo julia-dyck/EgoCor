@@ -321,6 +321,7 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
                       adj = 0,
                       cex.main = 1,
                       font = 1)
+      x = NULL
       graphics::curve(vmod.list[[d]]$psill[1] + vmod.list[[d]]$psill[2]*(1 - exp(-x/vmod.list[[d]]$range[2])), add = TRUE)
       pars = round(infotable[d,c(4,5,7,8,9)], digits = 2)
 
@@ -359,6 +360,7 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
       plt
       graphics::axis(1, cex.axis = 0.8)
       graphics::axis(2, cex.axis = 0.8)
+      x = NULL
       graphics::curve(vmod.list[[d]]$psill[1] + vmod.list[[d]]$psill[2]*(1 - exp(-x/vmod.list[[d]]$range[2])), add = TRUE)
       pars = round(infotable[d,c(4,5,7,8,9)], digits = 2)
 
@@ -459,6 +461,7 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
         plt
         graphics::axis(1, cex.axis = 0.8)
         graphics::axis(2, cex.axis = 0.8)
+        x = NULL
         graphics::curve(vmod.list[[d]]$psill[1] + vmod.list[[d]]$psill[2]*(1 - exp(-x/vmod.list[[d]]$range[2])), add = TRUE)
         pars = round(infotable[d,c(3,4,6,7,8)], digits = 2)
       })
