@@ -118,7 +118,7 @@
 
 
 par.uncertainty = function(vario.mod.output, mod.nr,
-                           par.est = NULL, data= NULL, max.dist=NULL,nbins=NULL,
+                           par.est = NULL, data = NULL, max.dist = NULL,nbins = NULL,
                            B = 1000, threshold.factor = 1.2, fit.method = 7){
 
   vario.mod.output.arg <- deparse(substitute(vario.mod.output))
@@ -191,7 +191,7 @@ par.uncertainty = function(vario.mod.output, mod.nr,
   sample = stats::na.omit(sample)
   max.dist = as.numeric(vario.mod.output$info.table[1])
   nbins = as.numeric(vario.mod.output$info.table[2]) #input nbins (not corrected ones! in case of co-locatted observations)
-  fit.method = as.numeric(vario.mod$input.arguments$fit.method)
+  fit.method = as.numeric(vario.mod.output$input.arguments$fit.method)
   emp.variance = stats::var(sample[,3])
   # check whether the inserted sv model seems probable:
   tau = threshold.factor
