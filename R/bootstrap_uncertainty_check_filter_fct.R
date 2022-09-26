@@ -8,7 +8,7 @@
 # ## SpatialTools
 # ## stats
 
-bootstrap.unc.check = function(sample, max.dist, nbins, B = 1000, thr=c(1.1,1.5,2.0,2.5,3.0)){
+bootstrap.unc.check = function(sample, max.dist, nbins, B = 1000, thr=c(1.1,1.5,2.0,2.5,3.0), fit.method = 7){
   # sample.geo = geoR::as.geodata(sample)
   sample.geo = as.data.frame(sample)
   colnames(sample.geo)[1:2] = c("x", "y")
@@ -32,6 +32,7 @@ bootstrap.unc.check = function(sample, max.dist, nbins, B = 1000, thr=c(1.1,1.5,
   sv.mod = gstat::fit.variogram(emp.sv, model = v,  # fitting the model with starting model
                                             fit.sills = TRUE,
                                             fit.ranges = TRUE,
+                                            fit.method = fit.method,
                                             debug.level = 1, warn.if.neg = FALSE, fit.kappa = FALSE)
   mod.pars = c(sv.mod$psill[1], sv.mod$psill[2], sv.mod$range[2])
   # (3)
