@@ -8,6 +8,7 @@ vario.mod(
   data,
   max.dist = c(2000, 1500, 1000, 750, 500, 250),
   nbins = 13,
+  fit.method = 7,
   shinyresults = TRUE,
   windowplots = FALSE,
   pdf = FALSE,

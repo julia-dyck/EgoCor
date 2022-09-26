@@ -142,7 +142,6 @@ par.uncertainty = function(vario.mod.output, mod.nr,
     if(missing(data)){stop("Argument data has to be provided.\n")}
     if(missing(max.dist)){stop("Argument max.dist has to be provided.\n")}
     if(missing(nbins)){stop("Argument nbins has to be provided.\n")}
-    if(missing(fit.method)){stop("Argument fit.method has to be provided.\n")}
 
     if(!(is.numeric(par.est)) || !(length(par.est)==3)){stop("Argument par.est has to be a numeric vector of length 3 containing the nugget effect,\n partial sill and shape of the exponential semi-variogram model.")}
     if(!((is.data.frame(data))||(is.matrix(data)))){stop("Argument data has to be a matrix or data frame with\n the x-coordinates in the first column,\n the y-coordinates in the second column\n and the attribute values of interest in the third column. \n It is required to be the same dataset used for the\n estimation of the semi-variogram model of interest.")}
@@ -241,7 +240,6 @@ par.uncertainty = function(vario.mod.output, mod.nr,
   ### print sth automatically?
 
 }
-
 
 
 

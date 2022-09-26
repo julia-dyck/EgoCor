@@ -117,7 +117,7 @@ We want to see if adjusting for some predictors of birthweight explain some or a
 ```{r fig5, fig.height = 4.5, fig.width = 6, fig.align = "center"}
 res <- lm(formula = birthweight ~ datediff + primiparous + bmi, data = birth)
 v.prep = vario.reg.prep(res, data = birth)
-models<-vario.mod(v.prep, max.dist = c(800,600), shinyresults = FALSE, windowplots = TRUE)
+models = vario.mod(v.prep, max.dist = c(800,600), shinyresults = FALSE, windowplots = TRUE)
 ```
 
 The results point towards a reduced spatial correlation structure with a maximal distance reduced to half the one obtained before adjustment and much less regularity in the empirical semi-variogram.

@@ -179,7 +179,7 @@
 
 
 
-vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
+vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13, fit.method = 7,
                      shinyresults = TRUE, windowplots = FALSE,
                      pdf = FALSE, pdf.directory = getwd(), pdf.name = "Semivariograms"){
   #### necessary packages
@@ -269,6 +269,7 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
     exp.variogram.mod <- gstat::fit.variogram(vario, model = v,  # fitting the model with starting model
                                        fit.sills = TRUE,
                                        fit.ranges = TRUE,
+                                       fit.method = fit.method,
                                        debug.level = 1, warn.if.neg = FALSE, fit.kappa = FALSE)
   }
 
@@ -398,7 +399,7 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
   # specified arguments in the input:
   # for information purposes and for the parameter uncertainty estimation
   input.arguments = list(data = data, max.dist = max.dist,
-                         nbins = nbins,
+                         nbins = nbins, fit.method = fit.method,
                          pdf = pdf, pdf.directory = pdf.directory,
                          pdf.name = pdf.name)
 
