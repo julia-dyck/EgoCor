@@ -12,7 +12,8 @@ par.uncertainty(
   max.dist = NULL,
   nbins = NULL,
   B = 1000,
-  threshold.factor = 1.2
+  threshold.factor = 1.2,
+  fit.method = 7
 )
 }
 \arguments{
@@ -45,6 +46,8 @@ of each parameter.}
 
 \item{threshold.factor}{The threshold factor specifies the filter within the filtered
 bootstrap method (see details). If not specified, a default value of 1.2 is used.}
+
+\item{fit.method}{The fit method used in the semivariogram estimation with the gstat package.}
 }
 \value{
 The function returns parameter estimates and corresponding standard error estimates

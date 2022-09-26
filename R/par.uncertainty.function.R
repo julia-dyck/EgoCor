@@ -25,6 +25,7 @@
 #'          of each parameter.
 #' @param threshold.factor The threshold factor specifies the filter within the filtered
 #'                         bootstrap method (see details). If not specified, a default value of 1.2 is used.
+#' @param fit.method The fit method used in the semivariogram estimation with the gstat package.
 #'
 #' @details \strong{Two alternative approaches for the input of the arguments:}
 #'
