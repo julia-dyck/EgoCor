@@ -19,7 +19,11 @@ User friendly interface based on the R package 'gstat' to fit
 
 ## Installation
 
-You can install the development version of the EgoCor package from [GitHub](https://github.com/) with:
+You can install the EgoCor package from [CRAN](https://CRAN.R-project.org/package=EgoCor) with:
+
+    install.packages("EgoCor")
+
+and the development version from [GitHub](https://github.com/) with:
 
     # install.packages("devtools") # if not installed, yet
     # remove.packages("EgoCor")    # if an old version of the package is installed
