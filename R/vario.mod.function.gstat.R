@@ -231,7 +231,9 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
     # purpose: make variog function usable in lapply()
     max.dist = max.dist.nbins.cbinded[1]
     nbins = max.dist.nbins.cbinded[2]
-    est.variog = gstat::variogram(object = data.ge[[1]] ~ 1, data = data.ge, cutoff = max.dist, width = max.dist / nbins)
+    est.variog = list()
+    est.variog$empsv = gstat::variogram(object = data.ge[[1]] ~ 1, data = data.ge, cutoff = max.dist, width = max.dist / nbins)
+    est.variog$max.dist = max.dist
     return(est.variog)}
 
   if(is.atomic(max.dist) && length(max.dist) == 1 && is.atomic(nbins) && length(nbins) == 1){# max.dist and nbins both scalar
@@ -259,16 +261,16 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
   variog.list = list()
   variog.list = apply(max.dist.nbins.matrix, 1, variog.dist.bin.dep)
 
-  nbins.used = sapply(variog.list, function(x) dim(x)[1])
+  nbins.used = sapply(variog.list, function(x) dim(x$empsv)[1])
 
   #### estimate exponential variogram model
   variofit.less.arg = function(vario){
     # variogram modelling function with parameter structure, st. lapply can be used
     ini.partial.sill <- sample.var # partial sill parameter of the exp. model (also called sigmasq)
-    ini.shape <- max(vario$dist)/3 # oder /4; shape parameter of the exp. model (also called phi)
+    ini.shape <- vario$max.dist/3 # oder /4; shape parameter of the exp. model (also called phi)
     ini.values <- c(ini.partial.sill, ini.shape)
     v = gstat::vgm(psill = ini.partial.sill, model = "Exp", range = ini.shape, nugget = 0)
-    exp.variogram.mod <- gstat::fit.variogram(vario, model = v,  # fitting the model with starting model
+    exp.variogram.mod <- gstat::fit.variogram(vario$empsv, model = v,  # fitting the model with starting model
                                        fit.sills = TRUE,
                                        fit.ranges = TRUE,
                                        fit.method = fit.method,
@@ -299,6 +301,7 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
   infotable = data.frame(max.dist = max.dist.vect, nbins = as.integer(nbins.vect),
                          nbins.used = nbins.used,
                          estimated.pars, prac.range, RSV, rel.bias)
+  rownames(infotable) = 1:(dim(infotable)[1])
 
   #### Save and restore graphical parameter settings ###
   originalpar = graphics::par(no.readonly = TRUE) # save par settings before adjusting here for graphical output
@@ -313,8 +316,8 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
     graphics::par(mgp = c(1.5, 0.5, 0.0))
     graphics::par(omi = c(1.0, 1, 1.5, 1.0))
     for (d in 1:length(max.dist.vect)){
-      plt = plot(variog.list[[d]]$dist, variog.list[[d]]$gamma, pch = 16, xaxt = "n", yaxt = "n",
-                 xlab = "Distance", ylab = "Semivariance", ylim = c(0, max(variog.list[[d]]$gamma)))
+      plt = plot(variog.list[[d]]$empsv$dist, variog.list[[d]]$empsv$gamma, pch = 16, xaxt = "n", yaxt = "n",
+                 xlab = "Distance", ylab = "Semivariance", ylim = c(0, max(variog.list[[d]]$empsv$gamma)))
       plt
       graphics::axis(1, cex.axis = 0.8)
       graphics::axis(2, cex.axis = 0.8)
@@ -354,8 +357,8 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
     for (d in 1:length(max.dist.vect)){
       # grDevices::x11() # open a new window for each plot
       # esp. to prevent overwriting plots in basic R GUI
-      plt = plot(variog.list[[d]]$dist, variog.list[[d]]$gamma, pch = 16, xaxt = "n", yaxt = "n",
-                 xlab = "Distance", ylab = "Semivariance", ylim = c(0, max(variog.list[[d]]$gamma)))
+      plt = plot(variog.list[[d]]$empsv$dist, variog.list[[d]]$empsv$gamma, pch = 16, xaxt = "n", yaxt = "n",
+                 xlab = "Distance", ylab = "Semivariance", ylim = c(0, max(variog.list[[d]]$empsv$gamma)), xlim = c(0,500))
       graphics::title(paste("Maximal distance:",max.dist.vect[d],
                             "\nNumber of bins:",nbins.used[d] , sep=" "),
                       adj = 0,
@@ -455,8 +458,8 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
                       "max. distance of ", max.dist.vect, " and ",
                       nbins.used, " bins")
         d = as.numeric(which(expr == input$modID))
-        plt = plot(variog.list[[d]]$dist, variog.list[[d]]$gamma, pch = 16, xaxt = "n", yaxt = "n",
-                   xlab = "Distance", ylab = "Semivariance", ylim = c(0, max(variog.list[[d]]$gamma)))
+        plt = plot(variog.list[[d]]$empsv$dist, variog.list[[d]]$empsv$gamma, pch = 16, xaxt = "n", yaxt = "n",
+                   xlab = "Distance", ylab = "Semivariance", ylim = c(0, max(variog.list[[d]]$empsv$gamma)))
         graphics::title(paste("Maximal distance:",max.dist.vect[d],
                               "\nNumber of bins:",nbins.used[d] , sep=" "),
                         adj = 0,
