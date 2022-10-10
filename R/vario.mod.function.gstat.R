@@ -317,7 +317,7 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
     graphics::par(omi = c(1.0, 1, 1.5, 1.0))
     for (d in 1:length(max.dist.vect)){
       plt = plot(variog.list[[d]]$empsv$dist, variog.list[[d]]$empsv$gamma, pch = 16, xaxt = "n", yaxt = "n",
-                 xlab = "Distance", ylab = "Semivariance", ylim = c(0, max(variog.list[[d]]$empsv$gamma)))
+                 xlab = "Distance", ylab = "Semivariance", ylim = c(0, max(variog.list[[d]]$empsv$gamma)), xlim = c(0,variog.list[[d]]$max.dist))
       plt
       graphics::axis(1, cex.axis = 0.8)
       graphics::axis(2, cex.axis = 0.8)
@@ -358,7 +358,7 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
       # grDevices::x11() # open a new window for each plot
       # esp. to prevent overwriting plots in basic R GUI
       plt = plot(variog.list[[d]]$empsv$dist, variog.list[[d]]$empsv$gamma, pch = 16, xaxt = "n", yaxt = "n",
-                 xlab = "Distance", ylab = "Semivariance", ylim = c(0, max(variog.list[[d]]$empsv$gamma)), xlim = c(0,500))
+                 xlab = "Distance", ylab = "Semivariance", ylim = c(0, max(variog.list[[d]]$empsv$gamma)), xlim = c(0,variog.list[[d]]$max.dist))
       graphics::title(paste("Maximal distance:",max.dist.vect[d],
                             "\nNumber of bins:",nbins.used[d] , sep=" "),
                       adj = 0,
@@ -459,7 +459,7 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
                       nbins.used, " bins")
         d = as.numeric(which(expr == input$modID))
         plt = plot(variog.list[[d]]$empsv$dist, variog.list[[d]]$empsv$gamma, pch = 16, xaxt = "n", yaxt = "n",
-                   xlab = "Distance", ylab = "Semivariance", ylim = c(0, max(variog.list[[d]]$empsv$gamma)))
+                   xlab = "Distance", ylab = "Semivariance", ylim = c(0, max(variog.list[[d]]$empsv$gamma)), xlim = c(0,variog.list[[d]]$max.dist))
         graphics::title(paste("Maximal distance:",max.dist.vect[d],
                               "\nNumber of bins:",nbins.used[d] , sep=" "),
                         adj = 0,
