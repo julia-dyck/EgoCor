@@ -1,9 +1,9 @@
-
+#
 # needed packages
 # ## gstat
 
 
-sv.sep = function(data, coords, max.dist, nbins){
+sv.sep = function(data, coords, max.dist, nbins, fit.method){
   data.ge = as.data.frame(cbind(coords,data))
   colnames(data.ge)[1:2] = c("x", "y")
   sp::coordinates(data.ge) = ~x+y
@@ -15,6 +15,7 @@ sv.sep = function(data, coords, max.dist, nbins){
   sv.mod = gstat::fit.variogram(emp.sv, model = v,  # fitting the model with starting model
                                 fit.sills = TRUE,
                                 fit.ranges = TRUE,
+                                fit.method = fit.method,
                                 debug.level = 1, warn.if.neg = FALSE, fit.kappa = FALSE)
   mod.pars = c(sv.mod$psill[1], sv.mod$psill[2], sv.mod$range[2])
   return(mod.pars)

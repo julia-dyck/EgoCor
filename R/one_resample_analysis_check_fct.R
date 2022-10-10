@@ -1,7 +1,7 @@
 
 
 
-one_resample_analysis_check = function(platzhalter, y.iid, L, nscore.obj, coords, max.dist, nbins, threshold){
+one_resample_analysis_check = function(platzhalter, y.iid, L, nscore.obj, coords, max.dist, nbins, threshold, fit.method = 7){
   # (6) resampling from y.iid
   resmpl = sample(y.iid, size = length(y.iid), replace = T)
 
@@ -15,7 +15,7 @@ one_resample_analysis_check = function(platzhalter, y.iid, L, nscore.obj, coords
   #                             repeating this function application
 
   # (10) semivariogram model estimation, wls
-  wls.est = sv.sep(resmpl, coords = coords, max.dist = max.dist, nbins = nbins)
+  wls.est = sv.sep(resmpl, coords = coords, max.dist = max.dist, nbins = nbins, fit.method = fit.method)
   emp.var = stats::var(resmpl)
   mod.var = wls.est[1] + wls.est[2]
 

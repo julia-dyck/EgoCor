@@ -399,7 +399,7 @@ vario.mod2 = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13
   # specified arguments in the input:
   # for information purposes and for the parameter uncertainty estimation
   input.arguments = list(data = data, max.dist = max.dist,
-                         nbins = nbins,
+                         nbins = nbins, fit.method = fit.method,
                          pdf = pdf, pdf.directory = pdf.directory,
                          pdf.name = pdf.name)
 

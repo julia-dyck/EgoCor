@@ -25,6 +25,7 @@
 #'          of each parameter.
 #' @param threshold.factor The threshold factor specifies the filter within the filtered
 #'                         bootstrap method (see details). If not specified, a default value of 1.2 is used.
+#' @param fit.method The fit method used in the semivariogram estimation with the gstat package.
 #'
 #' @details \strong{Two alternative approaches for the input of the arguments:}
 #'
@@ -117,8 +118,8 @@
 
 
 par.uncertainty = function(vario.mod.output, mod.nr,
-                           par.est = NULL, data= NULL, max.dist=NULL,nbins=NULL,
-                           B = 1000, threshold.factor = 1.2){
+                           par.est = NULL, data = NULL, max.dist = NULL,nbins = NULL,
+                           B = 1000, threshold.factor = 1.2, fit.method = 7){
 
   vario.mod.output.arg <- deparse(substitute(vario.mod.output))
   mod.nr.arg <- deparse(substitute(mod.nr))
@@ -158,11 +159,13 @@ par.uncertainty = function(vario.mod.output, mod.nr,
     sp::coordinates(data.ge) = ~x+y
 
     if(!(is.numeric(max.dist)) || !(length(max.dist)==1)){stop("Argument max.dist has to be a numeric of length 1.")}
+    # ! for is.integer?
     if(!((is.numeric(nbins))||(is.integer(nbins))) || !(length(nbins)==1)){stop("Argument nbins has to be a numeric of length 1.")}
+    if(!((is.numeric(fit.method)) || !(length(nbins)==1))){stop("Argument fit.method has to be a numeric of length 1.")}
 
 
     vario.mod.output = list()
-    vario.mod.output$input.arguments = list(data = data, max.dist = max.dist)
+    vario.mod.output$input.arguments = list(data = data, max.dist = max.dist, fit.method = fit.method)
     vario.mod.output$info.table = c(max.dist = max.dist, nbins = nbins,
                                     nugget = par.est[1], partial.sill = par.est[2], shape = par.est[3],
                                     prac.range = NA, RSV = NA, rel.bias = NA)
@@ -187,6 +190,7 @@ par.uncertainty = function(vario.mod.output, mod.nr,
   sample = stats::na.omit(sample)
   max.dist = as.numeric(vario.mod.output$info.table[1])
   nbins = as.numeric(vario.mod.output$info.table[2]) #input nbins (not corrected ones! in case of co-locatted observations)
+  fit.method = as.numeric(vario.mod.output$input.arguments$fit.method)
   emp.variance = stats::var(sample[,3])
   # check whether the inserted sv model seems probable:
   tau = threshold.factor
@@ -197,7 +201,7 @@ par.uncertainty = function(vario.mod.output, mod.nr,
 
   ### apply bootstrap.unc.check fct.
   cat("\n Bootstrap started.\n This can take a few minutes depending on the number\n of bootstrap samples B to be generated.\n\n")
-  unc.est = bootstrap.unc.check(sample=sample, max.dist=max.dist, nbins = nbins, B = B, thr = tau)
+  unc.est = bootstrap.unc.check(sample=sample, max.dist=max.dist, nbins = nbins, B = B, thr = tau, fit.method = fit.method)
   ### save the results
 
   #return(unc.est)
@@ -236,7 +240,6 @@ par.uncertainty = function(vario.mod.output, mod.nr,
   ### print sth automatically?
 
 }
-
 
 
 

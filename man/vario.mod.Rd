@@ -8,6 +8,7 @@ vario.mod(
   data,
   max.dist = c(2000, 1500, 1000, 750, 500, 250),
   nbins = 13,
+  fit.method = 7,
   shinyresults = TRUE,
   windowplots = FALSE,
   pdf = FALSE,
@@ -29,6 +30,9 @@ provided, the \code{ nbins} argument must be either a scalar or a vector of the 
 \item{nbins}{An optional argument; the default is 13 bins for all empirical semi-variograms to be estimated.
 Either a scalar or vector containing the number of bins can be inserted. If a vector is
 provided, the \code{max.dist} argument must be either a scalar or a vector of the same length.}
+
+\item{fit.method}{An optional argument that specifies the fit method used by the gstat function fit.variogram to fit the semivariogram.
+The default value ist 7. Only values 1,2,6,7 are possible. Please see the package description of gstat for more information.}
 
 \item{shinyresults}{A logical argument; by default TRUE. If \code{shinyresults = T},
 the information table and graphics of
