@@ -254,9 +254,6 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
   #                                L=L, nscore.obj = nscore.obj,
   #                                coords = coords, max.dist = max.dist, nbins = nbins)
 
-
-  # Testen mit mcapply -> viel schneller
-  t1 = Sys.time()
   par.est.b = t(parallel::mclapply(rep(0, B), one_resample_analysis_check2, y.iid=y.iid, L=L,
                        nscore.obj = nscore.obj, coords = coords,
                        max.dist = max.dist, nbins = nbins,
@@ -280,8 +277,6 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
     par.est.b = rbind(par.est.b, re.par.est)
     nr_estimates = length(which(apply(par.est.b[,-(1:3)], 1, sum) == 0))
   }
-  t2 = Sys.time()
-  t2-t1
 
    # evaluating the sds of the parameter estimates
   nr.thr = length(threshold.factor)
