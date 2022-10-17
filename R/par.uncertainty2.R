@@ -193,7 +193,7 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
   fit.method = as.numeric(vario.mod.output$input.arguments$fit.method)
   emp.variance = stats::var(sample[,3])
   # check whether the inserted sv model seems probable:
-  tau = threshold.factor
+  tau = threshold.factor[1]
   if(par.est[1]+par.est[2] > tau*emp.variance){warning("The overall variance according to the estimated semi-variogram model does not represent\n the empirical variance of the data well.\n Please check whether the semi-variogram model is appropriate before using the\n parameter and uncertainty estimates.")}
   if(par.est[3] < 0){warning("The shape parameter phi according to the estimated semi-variogram model is < 0.\n Please check whether the semi-variogram model is appropriate before using the\n parameter and uncertainty estimates.")}
 
