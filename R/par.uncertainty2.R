@@ -278,7 +278,7 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
     nr_estimates = length(which(apply(par.est.b[,-(1:3)], 1, sum) == 0))
   }
 
-   # evaluating the sds of the parameter estimates
+  # evaluating the sds of the parameter estimates
   nr.thr = length(threshold.factor)
   par.sds = numeric(length = 3*nr.thr)
   cis = numeric(length = 6*nr.thr)
