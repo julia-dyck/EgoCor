@@ -197,11 +197,8 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
   if(par.est[1]+par.est[2] > tau*emp.variance){warning("The overall variance according to the estimated semi-variogram model does not represent\n the empirical variance of the data well.\n Please check whether the semi-variogram model is appropriate before using the\n parameter and uncertainty estimates.")}
   if(par.est[3] < 0){warning("The shape parameter phi according to the estimated semi-variogram model is < 0.\n Please check whether the semi-variogram model is appropriate before using the\n parameter and uncertainty estimates.")}
 
-
-
   ### apply bootstrap.unc.check fct.
   cat("\n Bootstrap started.\n This can take a few minutes depending on the number\n of bootstrap samples B to be generated.\n\n")
-
 
   sample.geo = as.data.frame(sample)
   colnames(sample.geo)[1:2] = c("x", "y")
@@ -249,11 +246,6 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
   # (5) transform y in an iid sample
   y.iid = solve(L)%*%y
 
-  # (6),(7),(8) and (10)
-  #par.est = one.resample.analysis(platzhalter = NULL, y.iid=y.iid,
-  #                                L=L, nscore.obj = nscore.obj,
-  #                                coords = coords, max.dist = max.dist, nbins = nbins)
-
   par.est.b = t(parallel::mclapply(rep(0, B), one_resample_analysis_check2, y.iid=y.iid, L=L,
                        nscore.obj = nscore.obj, coords = coords,
                        max.dist = max.dist, nbins = nbins,
@@ -295,8 +287,6 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
   rownames(par.est.b) = NULL
   par.re_est = par.est.b[which(apply(par.est.b[,-(1:3)], 1, sum) == 0),1:3]
   unc.est = list(sds = par.sds, cis = cis, par.re_est = par.re_est)
-
-
 
 
   #return(unc.est)
