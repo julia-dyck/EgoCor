@@ -302,7 +302,7 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
   #return(unc.est)
   ### FORMAT THE RESULTS
   unc.table = cbind((par.est), unc.est$sds)
-  rownames(unc.table) = c("nugget effect", "partial sill", "shape")
+  if (nrow(unc.table) == 3){rownames(unc.table) = c("nugget effect", "partial sill", "shape")}
   colnames(unc.table) = c("Estimate", "Std. Error")
 
   ses = unc.est$sds
