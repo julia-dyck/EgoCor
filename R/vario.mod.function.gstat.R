@@ -268,7 +268,6 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
     # variogram modelling function with parameter structure, st. lapply can be used
     ini.partial.sill <- sample.var # partial sill parameter of the exp. model (also called sigmasq)
     ini.shape <- vario$max.dist/3 # oder /4; shape parameter of the exp. model (also called phi)
-    ini.values <- c(ini.partial.sill, ini.shape)
     v = gstat::vgm(psill = ini.partial.sill, model = "Exp", range = ini.shape, nugget = 0)
     exp.variogram.mod <- gstat::fit.variogram(vario$empsv, model = v,  # fitting the model with starting model
                                        fit.sills = TRUE,
@@ -277,8 +276,22 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
                                        debug.level = 1, warn.if.neg = FALSE, fit.kappa = FALSE)
   }
 
+  variofit.less.arg_nlm = function(vario){
+    theta.star0 = log(c(10, sample.var, vario$max.dist/3))
+    exp.variogram.mod = nlm(loss, p = theta.star0, h = vario$empsv$dist, gamma_hat = vario$empsv$gamma,
+                            n_h = vario$empsv$np, check.analyticals = F)
+    model = c("Nug", "Exp")
+    psill = exp(exp.variogram.mod$estimate[1:2])
+    range = c(0, exp(exp.variogram.mod$estimate[3]))
+    return(data.frame(model = model, psill = psill, range = range))
+  }
 
-  vmod.list = lapply(variog.list, variofit.less.arg)
+  if (fit.method == 8){
+    vmod.list = lapply(variog.list, variofit.less.arg_nlm)
+  }
+  else{
+    vmod.list = lapply(variog.list, variofit.less.arg)
+  }
 
   par.extraction = function(vmod){
     est.pars = c(vmod$psill[1], vmod$psill[2], vmod$range[2])
