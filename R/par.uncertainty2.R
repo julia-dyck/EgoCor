@@ -26,6 +26,7 @@
 #' @param threshold.factor The threshold factor specifies the filter within the filtered
 #'                         bootstrap method (see details). If not specified, a default value of 1.2 is used.
 #' @param fit.method The fit method used in the semivariogram estimation with the gstat package.
+#' @param mc.cores The number of cores used for bootstrapping, utilizing the parallel R-package. More than one core is not supported on windows systems.
 #'
 #' @details \strong{Two alternative approaches for the input of the arguments:}
 #'
@@ -218,13 +219,26 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
   ini.partial.sill = stats::var(y.geo[[1]])
   ini.shape = max(emp.sv$dist)/3
   ini.values = c(ini.partial.sill, ini.shape)
-  v = gstat::vgm(psill = ini.partial.sill, model = "Exp", range = ini.shape, nugget = 0)
-  sv.mod = gstat::fit.variogram(emp.sv, model = v,  # fitting the model with starting model
-                                fit.sills = TRUE,
-                                fit.ranges = TRUE,
-                                fit.method = fit.method,
-                                debug.level = 1, warn.if.neg = FALSE, fit.kappa = FALSE)
-  mod.pars = c(sv.mod$psill[1], sv.mod$psill[2], sv.mod$range[2])
+
+  if (fit.method == 8){
+    v = gstat::vgm(psill = ini.partial.sill, model = "Exp", range = ini.shape, nugget = 0)
+    sv.mod = gstat::fit.variogram(emp.sv, model = v,  # fitting the model with starting model
+                                  fit.sills = TRUE,
+                                  fit.ranges = TRUE,
+                                  fit.method = 7,
+                                  debug.level = 1, warn.if.neg = FALSE, fit.kappa = FALSE)
+    mod.pars = c(sv.mod$psill[1], sv.mod$psill[2], sv.mod$range[2])
+  }
+  else{
+    v = gstat::vgm(psill = ini.partial.sill, model = "Exp", range = ini.shape, nugget = 0)
+    sv.mod = gstat::fit.variogram(emp.sv, model = v,  # fitting the model with starting model
+                                  fit.sills = TRUE,
+                                  fit.ranges = TRUE,
+                                  fit.method = fit.method,
+                                  debug.level = 1, warn.if.neg = FALSE, fit.kappa = FALSE)
+    mod.pars = c(sv.mod$psill[1], sv.mod$psill[2], sv.mod$range[2])
+  }
+
   # (3)
   Dist_mat = SpatialTools::dist1(coords) # NxN distance matrix
 
@@ -249,7 +263,7 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
   par.est.b = t(parallel::mclapply(rep(0, B), one_resample_analysis_check2, y.iid=y.iid, L=L,
                        nscore.obj = nscore.obj, coords = coords,
                        max.dist = max.dist, nbins = nbins,
-                       threshold.factor=threshold.factor,
+                       threshold.factor=threshold.factor, fit.method = fit.method,
                        mc.cores = mc.cores))
 
   par.est.b = matrix(unlist(par.est.b), nrow = length(par.est.b), byrow = T)
@@ -263,7 +277,7 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
     re.par.est = t(parallel::mclapply(rep(0, B-nr_estimates), one_resample_analysis_check2, y.iid=y.iid, L=L,
                                       nscore.obj = nscore.obj, coords = coords,
                                       max.dist = max.dist, nbins = nbins,
-                                      threshold=threshold.factor,
+                                      threshold=threshold.factor, fit.method = fit.method,
                                       mc.cores = mc.cores))
     re.par.est = matrix(unlist(re.par.est), nrow = length(re.par.est), byrow = T)
     par.est.b = rbind(par.est.b, re.par.est)
