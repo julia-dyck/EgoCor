@@ -31,7 +31,8 @@ Imports:
     shiny,
     sp,
     SpatialTools,
-    stats
+    stats,
+    methods
 Suggests:
     knitr,
     rmarkdown,
