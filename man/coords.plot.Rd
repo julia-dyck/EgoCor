@@ -13,7 +13,9 @@ the y-coordinates in meters in the second column,
 and the values of the attribute of interest in the third column.
 Additional columns are ignored.}
 
-\item{pch}{If set to TRUE the points are colored according to their values.}
+\item{pch}{Determines the point shape used in the plot.}
+
+\item{col}{If set to TRUE the points are colored according to their values.}
 }
 \value{
 The function returns a plot showing the points based on Cartesian coordinates. A black circle indicates that the
