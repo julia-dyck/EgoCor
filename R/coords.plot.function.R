@@ -9,7 +9,7 @@
 #'    and the values of the attribute of interest in the third column.
 #'    Additional columns are ignored.
 #' @param pch Determines the point shape used in the plot.
-#' @param pch If set to TRUE the points are colored according to their values.
+#' @param col If set to TRUE the points are colored according to their values.
 #'
 #'
 #' @return
