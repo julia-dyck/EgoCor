@@ -23,7 +23,7 @@ sv.sep2 = function(data, coords, max.dist, nbins, fit.method){
                                 fit.ranges = TRUE,
                                 fit.method = fit.method,
                                 debug.level = 1, warn.if.neg = FALSE, fit.kappa = FALSE)
-  if (is(warning, "warning")){
+  if (methods::is(warning, "warning")){
     warning("No convergence")
   }
   mod.pars = c(sv.mod$psill[1], sv.mod$psill[2], sv.mod$range[2])
