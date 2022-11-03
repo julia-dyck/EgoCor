@@ -13,7 +13,7 @@ sv.sep2_nlm = function(data, coords, max.dist, nbins){
                                 error = function(e) e)
 
   if (methods::is(exp.variogram.mod , "error")){
-    return(c(0,0,Inf))
+    return(c(0, 0, Inf))
   }
   else{
     return(exp(exp.variogram.mod$estimate))

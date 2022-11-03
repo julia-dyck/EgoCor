@@ -1,8 +1,3 @@
-#
-# needed packages
-# ## gstat
-
-
 sv.sep2 = function(data, coords, max.dist, nbins, fit.method){
   data.ge = as.data.frame(cbind(coords,data))
   colnames(data.ge)[1:2] = c("x", "y")

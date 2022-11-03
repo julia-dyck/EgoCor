@@ -1,5 +1,5 @@
+# weighted least squares loss with weights 1/N_h
 loss = function(theta.star, h, gamma_hat, n_h){
-  # weighted least squares with weights 1/N_h
   theta = exp(theta.star)
   expr1 = exp(-h/theta[3])
   expr2 = (1 - expr1)
