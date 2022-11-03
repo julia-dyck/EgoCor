@@ -190,7 +190,8 @@ par.uncertainty = function(vario.mod.output, mod.nr,
   sample = stats::na.omit(sample)
   max.dist = as.numeric(vario.mod.output$info.table[1])
   nbins = as.numeric(vario.mod.output$info.table[2]) #input nbins (not corrected ones! in case of co-locatted observations)
-  fit.method = as.numeric(vario.mod.output$input.arguments$fit.method)
+  if (as.numeric(vario.mod.output$input.arguments$fit.method) == 8) fit.method = fit.method # fit method 8 is not supported here
+  else fit.method = as.numeric(vario.mod.output$input.arguments$fit.method)
   emp.variance = stats::var(sample[,3])
   # check whether the inserted sv model seems probable:
   tau = threshold.factor
