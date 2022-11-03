@@ -211,15 +211,15 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
   nscore.obj = nscore(z)
   y = nscore.obj$nscore
   y.with.coords = cbind(coords,y)
-  # y.geo = geoR::as.geodata(y.with.coords)
   y.geo = as.data.frame(y.with.coords)
   sp::coordinates(y.geo) = ~x+y
   # (2) prep sv-model
   emp.sv = gstat::variogram(object = y.geo[[1]] ~ 1, data = y.geo, cutoff = max.dist, width = max.dist / nbins)
   ini.partial.sill = stats::var(y.geo[[1]])
-  ini.shape = max(emp.sv$dist)/3
+  ini.shape = max.dist/3
   ini.values = c(ini.partial.sill, ini.shape)
 
+  # starting model is still fitted with gstat because nlm performs terrible on normal score data
   if (fit.method == 8){
     v = gstat::vgm(psill = ini.partial.sill, model = "Exp", range = ini.shape, nugget = 0)
     sv.mod = gstat::fit.variogram(emp.sv, model = v,  # fitting the model with starting model
@@ -254,7 +254,7 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
   # (4) Cholesky decomposition -> fertige Fkt. existieren
 
   # Adding diag(epsilon) on the diagonal to force it to be positve definite (numerical reasons)
-  Cov_mat = Cov_mat + diag(rep(1e-7, nrow(sample)))
+  Cov_mat = Cov_mat + diag(rep(1e-12, nrow(sample)))
 
   L = t(chol(Cov_mat))
   # (5) transform y in an iid sample
@@ -263,7 +263,8 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
   par.est.b = t(parallel::mclapply(rep(0, B), one_resample_analysis_check2, y.iid=y.iid, L=L,
                        nscore.obj = nscore.obj, coords = coords,
                        max.dist = max.dist, nbins = nbins,
-                       threshold.factor=threshold.factor, fit.method = fit.method,
+                       threshold.factor=threshold.factor,
+                       fit.method = fit.method,
                        mc.cores = mc.cores))
 
   par.est.b = matrix(unlist(par.est.b), nrow = length(par.est.b), byrow = T)
@@ -277,7 +278,8 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
     re.par.est = t(parallel::mclapply(rep(0, B-nr_estimates), one_resample_analysis_check2, y.iid=y.iid, L=L,
                                       nscore.obj = nscore.obj, coords = coords,
                                       max.dist = max.dist, nbins = nbins,
-                                      threshold=threshold.factor, fit.method = fit.method,
+                                      threshold=threshold.factor,
+                                      fit.method = fit.method,
                                       mc.cores = mc.cores))
     re.par.est = matrix(unlist(re.par.est), nrow = length(re.par.est), byrow = T)
     par.est.b = rbind(par.est.b, re.par.est)
