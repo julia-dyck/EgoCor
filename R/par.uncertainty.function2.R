@@ -215,19 +215,16 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
   sp::coordinates(y.geo) = ~x+y
   # (2) prep sv-model
   emp.sv = gstat::variogram(object = y.geo[[1]] ~ 1, data = y.geo, cutoff = max.dist, width = max.dist / nbins)
-  ini.partial.sill = stats::var(y.geo[[1]])
+  ini.partial.sill = 1
   ini.shape = max.dist/3
   ini.values = c(ini.partial.sill, ini.shape)
 
   # starting model is still fitted with gstat because nlm performs terrible on normal score data
   if (fit.method == 8){
-    v = gstat::vgm(psill = ini.partial.sill, model = "Exp", range = ini.shape, nugget = 0)
-    sv.mod = gstat::fit.variogram(emp.sv, model = v,  # fitting the model with starting model
-                                  fit.sills = TRUE,
-                                  fit.ranges = TRUE,
-                                  fit.method = 7,
-                                  debug.level = 1, warn.if.neg = FALSE, fit.kappa = FALSE)
-    mod.pars = c(sv.mod$psill[1], sv.mod$psill[2], sv.mod$range[2])
+    theta.star0 = log(c(.1, ini.partial.sill, ini.shape))
+    sv.mod = nlm(loss, p = theta.star0, h = emp.sv$dist, gamma_hat = emp.sv$gamma,
+              n_h = emp.sv$np, check.analyticals = F)
+    mod.pars = exp(sv.mod$estimate)
   }
   else{
     v = gstat::vgm(psill = ini.partial.sill, model = "Exp", range = ini.shape, nugget = 0)
