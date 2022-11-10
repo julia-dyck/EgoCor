@@ -6,11 +6,5 @@ loss = function(theta.star, h, gamma_hat, n_h){
   gamma_exp = theta[1] + theta[2]*expr2
   expr3 = (gamma_hat - gamma_exp)
   out = sum(n_h*expr3^2)
-
-  attr(out, "gradient") = c(
-    -2*sum(n_h*expr3),
-    -2*sum(n_h*expr3*expr2),
-    2*theta[2]/(theta[3]^2)*sum(expr3*expr1*h)
-  )
   return(out)
 }
