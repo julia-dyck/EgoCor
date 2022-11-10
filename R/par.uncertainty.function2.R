@@ -223,7 +223,7 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
   if (fit.method == 8){
     theta.star0 = log(c(.1, ini.partial.sill, ini.shape))
     sv.mod = nlm(loss, p = theta.star0, h = emp.sv$dist, gamma_hat = emp.sv$gamma,
-              n_h = emp.sv$np, check.analyticals = F)
+              n_h = emp.sv$np)
     mod.pars = exp(sv.mod$estimate)
   }
   else{

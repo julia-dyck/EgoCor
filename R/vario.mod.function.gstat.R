@@ -279,7 +279,7 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
   variofit.less.arg_nlm = function(vario){
     theta.star0 = log(c(1, sample.var, vario$max.dist/3))
     exp.variogram.mod = stats::nlm(loss, p = theta.star0, h = vario$empsv$dist, gamma_hat = vario$empsv$gamma,
-                            n_h = vario$empsv$np, check.analyticals = F)
+                            n_h = vario$empsv$np)
     model = c("Nug", "Exp")
     psill = exp(exp.variogram.mod$estimate[1:2])
     range = c(0, exp(exp.variogram.mod$estimate[3]))
