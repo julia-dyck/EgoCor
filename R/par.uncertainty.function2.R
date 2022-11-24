@@ -222,7 +222,7 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
   # starting model is still fitted with gstat because nlm performs terrible on normal score data
   if (fit.method == 8){
     theta.star0 = log(c(.1, ini.partial.sill, ini.shape))
-    sv.mod = nlm(loss, p = theta.star0, h = emp.sv$dist, gamma_hat = emp.sv$gamma,
+    sv.mod = stats::nlm(loss, p = theta.star0, h = emp.sv$dist, gamma_hat = emp.sv$gamma,
               n_h = emp.sv$np)
     mod.pars = exp(sv.mod$estimate)
   }
