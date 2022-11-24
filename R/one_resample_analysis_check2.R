@@ -21,9 +21,12 @@ one_resample_analysis_check2 = function(platzhalter, y.iid, L, nscore.obj, coord
     warning = NULL
   }
   else{
-    wls.est = sv.sep2(resmpl, coords = coords, max.dist = max.dist, nbins = nbins, fit.method = fit.method)
-    warning = tryCatch(sv.sep2(resmpl, coords = coords, max.dist = max.dist, nbins = nbins, fit.method = fit.method),
+    wls.est = tryCatch(sv.sep2(resmpl, coords = coords, max.dist = max.dist, nbins = nbins, fit.method = fit.method),
                        warning = function(w) w)
+    if(methods::is(wls.est, "warning")){
+      warning = wls.est
+      wls.est = sv.sep2(resmpl, coords = coords, max.dist = max.dist, nbins = nbins, fit.method = fit.method)
+    }
   }
 
   emp.var = stats::var(resmpl)
