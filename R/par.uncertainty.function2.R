@@ -251,7 +251,7 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
   # (4) Cholesky decomposition -> fertige Fkt. existieren
 
   # Adding diag(epsilon) on the diagonal to force it to be positve definite (numerical reasons)
-  Cov_mat = Cov_mat + diag(rep(1e-12, nrow(sample)))
+  Cov_mat = Cov_mat + diag(rep(1e-15, nrow(sample)))
 
   L = t(chol(Cov_mat))
   # (5) transform y in an iid sample
