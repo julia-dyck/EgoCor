@@ -189,8 +189,8 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
   }
   sample = vario.mod.output$input.arguments$data[,1:3]
   sample = stats::na.omit(sample)
-  max.dist = as.numeric(vario.mod.output$info.table[1])
-  nbins = as.numeric(vario.mod.output$info.table[2]) #input nbins (not corrected ones! in case of co-locatted observations)
+  max.dist = as.numeric(vario.mod.output$infotable[1])
+  nbins = as.numeric(vario.mod.output$infotable[2]) #input nbins (not corrected ones! in case of co-locatted observations)
   fit.method = as.numeric(vario.mod.output$input.arguments$fit.method)
   emp.variance = stats::var(sample[,3])
   # check whether the inserted sv model seems probable:
@@ -304,7 +304,7 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
 
   #return(unc.est)
   ### FORMAT THE RESULTS
-  unc.table = cbind((par.est), unc.est$sds)
+  unc.table = cbind((mod.pars), unc.est$sds)
   if (nrow(unc.table) == 3){rownames(unc.table) = c("nugget effect", "partial sill", "shape")}
   colnames(unc.table) = c("Estimate", "Std. Error")
 
@@ -315,6 +315,20 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
   colnames(re_estimates) = c("nugget.star","part.sill.star","shape.star")
   reest.means = colMeans(re_estimates)
   names(reest.means) =  c("mean(nugget)","mean(partial.sill)","mean(shape)")
+
+  # find number of reestimates for each threshold
+  nr_reest_gstat = sum(par.est.b[,4])
+  nr_reest_thr = numeric(length(threshold.factor))
+  nr_overlap = numeric(length(threshold.factor))
+  for (i in 1:length(threshold.factor)){
+    nr_reest_thr[i] = sum(par.est.b[,4+i])
+    nr_overlap[i] = sum(par.est.b[,4] == 1 & par.est.b[,4+i] == 1)
+  }
+  # make table
+  nr_reest_table = matrix(c(rep(nr_reest_gstat, length(threshold.factor)), nr_reest_thr, nr_overlap),
+                            ncol = 3, nrow = length(threshold.factor))
+  colnames(nr_reest_table) = c("nr_reest_gstat", "nr_reest_thr", "nr_overlap")
+  rownames(nr_reest_table) = paste0("thr_", threshold.factor)
 
 
   # Fct. call
@@ -334,7 +348,8 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
                  unc.table = unc.table,
                  re_estimates = unc.est$par.re_est,
                  re_estimate.means = reest.means,
-                 call = c.call, all_est = par.est.b))
+                 call = c.call, all_est = par.est.b,
+                 nr_reest = nr_reest_table))
   ### print sth automatically?
 
 }
