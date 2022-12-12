@@ -119,7 +119,7 @@
 
 
 par.uncertainty2 = function(vario.mod.output, mod.nr,
-                           par.est = NULL, data = NULL, max.dist = NULL,nbins = NULL,
+                           par.est = NULL, data = NULL, max.dist = NULL, nbins = NULL,
                            B = 1000, threshold.factor = 1.2, fit.method = 7, mc.cores = 1){
 
   vario.mod.output.arg <- deparse(substitute(vario.mod.output))
@@ -219,7 +219,6 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
   ini.shape = max.dist/3
   ini.values = c(ini.partial.sill, ini.shape)
 
-  # starting model is still fitted with gstat because nlm performs terrible on normal score data
   if (fit.method == 8){
     theta.star0 = log(c(.1, ini.partial.sill, ini.shape))
     sv.mod = stats::nlm(loss, p = theta.star0, h = emp.sv$dist, gamma_hat = emp.sv$gamma,
@@ -304,7 +303,8 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
 
   #return(unc.est)
   ### FORMAT THE RESULTS
-  unc.table = cbind((mod.pars), unc.est$sds)
+  est = vario.mod.output$infotable[mod.nr, 4:6]
+  unc.table = cbind(rep(est, length(threshold.factor)), unc.est$sds)
   if (nrow(unc.table) == 3){rownames(unc.table) = c("nugget effect", "partial sill", "shape")}
   colnames(unc.table) = c("Estimate", "Std. Error")
 
