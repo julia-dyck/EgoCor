@@ -1,6 +1,9 @@
 
 # {EgoCor}: Simple Presentation of Estimated Exponential Semi-Variograms
 
+[![CRAN
+status](https://www.r-pkg.org/badges/version/EgoCor)](https://CRAN.R-project.org/package=EgoCor)
+
 ## Description
 
 User friendly interface based on the R package ‘gstat’ to fit
