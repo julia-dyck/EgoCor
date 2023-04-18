@@ -141,7 +141,7 @@ saved in a specified working directory.
          at which \eqn{\gamma(h^* = 0.95 \cdot \sigma^2)} is called the practical range.
          Formally, the practical range is
          defined as
-         \deqn{prac.range = \frac{1}{\phi} log\Big( \frac{\sigma_0^2}{0.05(c_0 + \sigma_0^2)} \Big).}
+         \deqn{prac.range = \phi ln\Big( \frac{\sigma_0^2}{0.05(c_0 + \sigma_0^2)} \Big).}
 
          Relative Structural Variability (RSV): The relative structural variability is a measure of
          the proportion of the total variance with a spatial structure and
