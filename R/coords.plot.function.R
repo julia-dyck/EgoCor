@@ -8,6 +8,9 @@
 #'    the y-coordinates in meters in the second column,
 #'    and the values of the attribute of interest in the third column.
 #'    Additional columns are ignored.
+#' @param pch Determines the point shape used in the plot.
+#' @param col If set to TRUE the points are colored according to their values.
+#'
 #'
 #' @return
 #' The function returns a plot showing the points based on Cartesian coordinates. A black circle indicates that the
@@ -29,7 +32,7 @@
 #' @export
 
 
-coords.plot <- function(data){
+coords.plot <- function(data, pch = 16, col = F){
   #### necessary packages
   # graphics
 
@@ -56,9 +59,16 @@ coords.plot <- function(data){
   y.range = c(min(data[,2]), max(data[,2]))
   # splitting up the data set in NA and non-NA
   data_na = data[which(is.na(data[,3])), 1:2]
-  data_no_na = data[which(!is.na(data[,3])), 1:2]
-  plot(data_no_na, main = "Coordinate plot",
-       xlim = x.range, ylim = y.range)
+  data_no_na = data[which(!is.na(data[,3])), 1:3]
+
+  if (col == T){
+    rbPal = grDevices::colorRampPalette(c("yellow", "red"))
+    color = rbPal(nrow(data_no_na))[as.numeric(cut(data_no_na[,3], breaks = nrow(data_no_na)))]
+  }
+  else{color = 1}
+
+  plot(data_no_na[,1:2], main = "Coordinate plot",
+       xlim = x.range, ylim = y.range, col = color, pch = pch)
   graphics::points(data_na[,1], data_na[,2], pch = 4, col = "red")
   graphics::legend("topright", title="outcome observed?", legend=c("yes  ", "no"),
          pch = c(1,4), col = c(1,2), ncol = 2, cex = 0.8)

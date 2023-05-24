@@ -26,6 +26,7 @@
 #' @param threshold.factor The threshold factor specifies the filter within the filtered
 #'                         bootstrap method (see details). If not specified, a default value of 1.2 is used.
 #' @param fit.method The fit method used in the semivariogram estimation with the gstat package.
+#' @param mc.cores The number of cores used for bootstrapping, utilizing the parallel R-package. More than one core is not supported on windows systems.
 #'
 #' @details \strong{Two alternative approaches for the input of the arguments:}
 #'
@@ -117,9 +118,9 @@
 
 
 
-par.uncertainty = function(vario.mod.output, mod.nr,
-                           par.est = NULL, data = NULL, max.dist = NULL,nbins = NULL,
-                           B = 1000, threshold.factor = 1.2, fit.method = 7){
+par.uncertainty2 = function(vario.mod.output, mod.nr,
+                           par.est = NULL, data = NULL, max.dist = NULL, nbins = NULL,
+                           B = 1000, threshold.factor = 1.2, fit.method = 7, mc.cores = 1){
 
   vario.mod.output.arg <- deparse(substitute(vario.mod.output))
   mod.nr.arg <- deparse(substitute(mod.nr))
@@ -179,7 +180,7 @@ par.uncertainty = function(vario.mod.output, mod.nr,
 
     if(!inherits(vario.mod.output,"vario.mod.output")){stop("Argument vario.mod.output has to be an output of the vario.mod()-function.") }
     if(!is.numeric(mod.nr)|| length(mod.nr)>1){stop("Argument mod.nr has to be a numeric of length 1.\n")}
-# durch is() oder inherits() ersetzen
+    # durch is() oder inherits() ersetzen
     vario.mod.output$info.table = vario.mod.output$infotable[mod.nr,]
     par.est = as.numeric(c(vario.mod.output$info.table$nugget,
                            vario.mod.output$info.table$partial.sill,
@@ -188,27 +189,123 @@ par.uncertainty = function(vario.mod.output, mod.nr,
   }
   sample = vario.mod.output$input.arguments$data[,1:3]
   sample = stats::na.omit(sample)
-  max.dist = as.numeric(vario.mod.output$info.table[1])
-  nbins = as.numeric(vario.mod.output$info.table[2]) #input nbins (not corrected ones! in case of co-locatted observations)
-  if (as.numeric(vario.mod.output$input.arguments$fit.method) == 8) fit.method = fit.method # fit method 8 is not supported here
-  else fit.method = as.numeric(vario.mod.output$input.arguments$fit.method)
+  max.dist = as.numeric(vario.mod.output$infotable[1])
+  nbins = as.numeric(vario.mod.output$infotable[2]) #input nbins (not corrected ones! in case of co-locatted observations)
+  fit.method = as.numeric(vario.mod.output$input.arguments$fit.method)
   emp.variance = stats::var(sample[,3])
   # check whether the inserted sv model seems probable:
-  tau = threshold.factor
+  tau = threshold.factor[1]
   if(par.est[1]+par.est[2] > tau*emp.variance){warning("The overall variance according to the estimated semi-variogram model does not represent\n the empirical variance of the data well.\n Please check whether the semi-variogram model is appropriate before using the\n parameter and uncertainty estimates.")}
   if(par.est[3] < 0){warning("The shape parameter phi according to the estimated semi-variogram model is < 0.\n Please check whether the semi-variogram model is appropriate before using the\n parameter and uncertainty estimates.")}
 
-
-
   ### apply bootstrap.unc.check fct.
   cat("\n Bootstrap started.\n This can take a few minutes depending on the number\n of bootstrap samples B to be generated.\n\n")
-  unc.est = bootstrap.unc.check(sample=sample, max.dist=max.dist, nbins = nbins, B = B, thr = tau, fit.method = fit.method)
-  ### save the results
+
+  sample.geo = as.data.frame(sample)
+  colnames(sample.geo)[1:2] = c("x", "y")
+  sp::coordinates(sample.geo) = ~x+y
+  coords = sp::coordinates(sample.geo)
+  z = sample.geo[[1]]
+
+  # (1) nscore transformation
+  nscore.obj = nscore(z)
+  y = nscore.obj$nscore
+  y.with.coords = cbind(coords,y)
+  y.geo = as.data.frame(y.with.coords)
+  sp::coordinates(y.geo) = ~x+y
+  # (2) prep sv-model
+  emp.sv = gstat::variogram(object = y.geo[[1]] ~ 1, data = y.geo, cutoff = max.dist, width = max.dist / nbins)
+  ini.partial.sill = 1
+  ini.shape = max.dist/3
+  ini.values = c(ini.partial.sill, ini.shape)
+
+  if (fit.method == 8){
+    theta.star0 = log(c(.1, ini.partial.sill, ini.shape))
+    sv.mod = stats::nlm(loss, p = theta.star0, h = emp.sv$dist, gamma_hat = emp.sv$gamma,
+              n_h = emp.sv$np)
+    mod.pars = exp(sv.mod$estimate)
+  }
+  else{
+    v = gstat::vgm(psill = ini.partial.sill, model = "Exp", range = ini.shape, nugget = 0)
+    sv.mod = gstat::fit.variogram(emp.sv, model = v,  # fitting the model with starting model
+                                  fit.sills = TRUE,
+                                  fit.ranges = TRUE,
+                                  fit.method = fit.method,
+                                  debug.level = 1, warn.if.neg = FALSE, fit.kappa = FALSE)
+    mod.pars = c(sv.mod$psill[1], sv.mod$psill[2], sv.mod$range[2])
+  }
+
+  # (3)
+  Dist_mat = SpatialTools::dist1(coords) # NxN distance matrix
+
+  # function for predicting the covariance based on distance
+  expmod = function(distvec, psill, phi){
+    return(psill*exp(-distvec/phi))
+  }
+
+  Cov_mat = apply(X = Dist_mat, MARGIN = 1, FUN = expmod, psill = mod.pars[2], phi = mod.pars[3])
+
+  # NxN Covariance matrix, contains all point-pairs' estimated Covariances
+  # based on sv.mod
+  # (4) Cholesky decomposition -> fertige Fkt. existieren
+
+  # Adding diag(epsilon) on the diagonal to force it to be positve definite (numerical reasons)
+  Cov_mat = Cov_mat + diag(rep(1e-15, nrow(sample)))
+
+  L = t(chol(Cov_mat))
+  # (5) transform y in an iid sample
+  y.iid = solve(L)%*%y
+
+  par.est.b = t(parallel::mclapply(rep(0, B), one_resample_analysis_check2, y.iid=y.iid, L=L,
+                       nscore.obj = nscore.obj, coords = coords,
+                       max.dist = max.dist, nbins = nbins,
+                       threshold.factor=threshold.factor,
+                       fit.method = fit.method,
+                       mc.cores = mc.cores))
+
+  par.est.b = matrix(unlist(par.est.b), nrow = length(par.est.b), byrow = T)
+  col_names = rep(NA, length(threshold.factor))
+
+  colnames(par.est.b) = c("nugget", "partial_sill", "range", "conv_filter", paste0("thr_filter_", threshold.factor))
+
+  nr_estimates = length(which(apply(par.est.b[,-(1:3)], 1, sum) == 0))
+
+  while(nr_estimates < B){
+    re.par.est = t(parallel::mclapply(rep(0, B-nr_estimates), one_resample_analysis_check2, y.iid=y.iid, L=L,
+                                      nscore.obj = nscore.obj, coords = coords,
+                                      max.dist = max.dist, nbins = nbins,
+                                      threshold=threshold.factor,
+                                      fit.method = fit.method,
+                                      mc.cores = mc.cores))
+    re.par.est = matrix(unlist(re.par.est), nrow = length(re.par.est), byrow = T)
+    par.est.b = rbind(par.est.b, re.par.est)
+    nr_estimates = length(which(apply(par.est.b[,-(1:3)], 1, sum) == 0))
+  }
+
+  # evaluating the sds of the parameter estimates
+  nr.thr = length(threshold.factor)
+  par.sds = numeric(length = 3*nr.thr)
+  cis = numeric(length = 6*nr.thr)
+  for(i in 1:nr.thr){
+    par.est.cleaned = par.est.b[which(par.est.b[,4+i] == 0 & par.est.b[,4] == 0),][1:B,]
+    par.sds[(i-1)*3+(1:3)] = apply(par.est.cleaned[,1:3], 2, stats::sd)
+    cis[(i-1)*6+(1:6)] = c(stats::quantile(par.est.cleaned[,1], probs=c(0.025,0.975)),
+                           stats::quantile(par.est.cleaned[,2], probs=c(0.025,0.975)),
+                           stats::quantile(par.est.cleaned[,3], probs=c(0.025,0.975)))
+  }
+
+  names(par.sds) = paste0(rep(c("n.sd","s.sd","p.sd"),nr.thr), as.vector(sapply(threshold.factor,rep, times=3)))
+  names(cis) = paste0(c(rep("n",2),rep("s",2),rep("p",2)), ".ci",c("l","u"),as.vector(sapply(threshold.factor,rep, times=6)))
+  rownames(par.est.b) = NULL
+  par.re_est = par.est.b[which(apply(par.est.b[,-(1:3)], 1, sum) == 0),1:3]
+  unc.est = list(sds = par.sds, cis = cis, par.re_est = par.re_est)
+
 
   #return(unc.est)
   ### FORMAT THE RESULTS
-  unc.table = cbind((par.est), unc.est$sds)
-  rownames(unc.table) = c("nugget effect", "partial sill", "shape")
+  est = vario.mod.output$infotable[mod.nr, 4:6]
+  unc.table = cbind(rep(est, length(threshold.factor)), unc.est$sds)
+  if (nrow(unc.table) == 3){rownames(unc.table) = c("nugget effect", "partial sill", "shape")}
   colnames(unc.table) = c("Estimate", "Std. Error")
 
   ses = unc.est$sds
@@ -218,6 +315,20 @@ par.uncertainty = function(vario.mod.output, mod.nr,
   colnames(re_estimates) = c("nugget.star","part.sill.star","shape.star")
   reest.means = colMeans(re_estimates)
   names(reest.means) =  c("mean(nugget)","mean(partial.sill)","mean(shape)")
+
+  # find number of reestimates for each threshold
+  nr_reest_gstat = sum(par.est.b[,4])
+  nr_reest_thr = numeric(length(threshold.factor))
+  nr_overlap = numeric(length(threshold.factor))
+  for (i in 1:length(threshold.factor)){
+    nr_reest_thr[i] = sum(par.est.b[,4+i])
+    nr_overlap[i] = sum(par.est.b[,4] == 1 & par.est.b[,4+i] == 1)
+  }
+  # make table
+  nr_reest_table = matrix(c(rep(nr_reest_gstat, length(threshold.factor)), nr_reest_thr, nr_overlap),
+                            ncol = 3, nrow = length(threshold.factor))
+  colnames(nr_reest_table) = c("nr_reest_gstat", "nr_reest_thr", "nr_overlap")
+  rownames(nr_reest_table) = paste0("thr_", threshold.factor)
 
 
   # Fct. call
@@ -237,7 +348,9 @@ par.uncertainty = function(vario.mod.output, mod.nr,
                  unc.table = unc.table,
                  re_estimates = unc.est$par.re_est,
                  re_estimate.means = reest.means,
-                 call = c.call))
+                 call = c.call, all_est = par.est.b,
+                 nr_reest = nr_reest_table))
   ### print sth automatically?
 
 }
+
