@@ -241,8 +241,3 @@ par.uncertainty = function(vario.mod.output, mod.nr,
   ### print sth automatically?
 
 }
-
-
-
-
-
