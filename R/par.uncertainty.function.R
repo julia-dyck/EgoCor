@@ -286,7 +286,7 @@ par.uncertainty = function(vario.mod.output, mod.nr,
     counter = counter +1
 
     cat('\r', nr_estimates, "of", B, "models converged.")
-    flush.console()
+    utils::flush.console()
   }
 
   # evaluating the sds of the parameter estimates
@@ -310,7 +310,9 @@ par.uncertainty = function(vario.mod.output, mod.nr,
 
   #return(unc.est)
   ### FORMAT THE RESULTS
-  est = vario.mod.output$infotable[mod.nr, 4:6]
+
+
+  est = par.est
   unc.table = as.data.frame(cbind(as.numeric(rep(est, length(threshold.factor))), unc.est$sds))
   if (nrow(unc.table) == 3){rownames(unc.table) = c("nugget effect", "partial sill", "shape")}
   colnames(unc.table) = c("Estimate", "Std. Error")
