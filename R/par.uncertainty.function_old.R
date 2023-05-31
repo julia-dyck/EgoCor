@@ -117,7 +117,7 @@
 
 
 
-par.uncertainty = function(vario.mod.output, mod.nr,
+par.uncertainty_old = function(vario.mod.output, mod.nr,
                            par.est = NULL, data = NULL, max.dist = NULL,nbins = NULL,
                            B = 1000, threshold.factor = 1.2, fit.method = 7){
 
