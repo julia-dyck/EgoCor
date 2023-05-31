@@ -1,4 +1,4 @@
-one_resample_analysis_check2 = function(platzhalter, y.iid, L, nscore.obj, coords, max.dist, nbins, threshold.factor, fit.method = 7){
+one_resample_analysis_check = function(platzhalter, y.iid, L, nscore.obj, coords, max.dist, nbins, threshold.factor, fit.method = 7){
   # (6) resampling from y.iid
   resmpl = sample(y.iid, size = length(y.iid), replace = T)
 
@@ -19,7 +19,7 @@ one_resample_analysis_check2 = function(platzhalter, y.iid, L, nscore.obj, coord
   # }
   # else{
 
-  wls = sv.sep2(resmpl, coords = coords, max.dist = max.dist, nbins = nbins, fit.method = fit.method)
+  wls = sv.sep(resmpl, coords = coords, max.dist = max.dist, nbins = nbins, fit.method = fit.method)
   wls.est = wls$mod.pars
 
   emp.var = stats::var(resmpl)

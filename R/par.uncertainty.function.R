@@ -118,7 +118,7 @@
 
 
 
-par.uncertainty2 = function(vario.mod.output, mod.nr,
+par.uncertainty = function(vario.mod.output, mod.nr,
                            par.est = NULL, data = NULL, max.dist = NULL, nbins = NULL,
                            B = 1000, threshold.factor = 1.2, fit.method = 7, mc.cores = 1){
 
@@ -254,7 +254,7 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
   # (5) transform y in an iid sample
   y.iid = solve(L)%*%y
 
-  par.est.b = t(parallel::mclapply(rep(0, B), one_resample_analysis_check2, y.iid=y.iid, L=L,
+  par.est.b = t(parallel::mclapply(rep(0, B), one_resample_analysis_check, y.iid=y.iid, L=L,
                        nscore.obj = nscore.obj, coords = coords,
                        max.dist = max.dist, nbins = nbins,
                        threshold.factor=threshold.factor,
@@ -274,7 +274,7 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
   counter = 0
   while(nr_estimates < B){
     if(B-nr_estimates < 20) mc.cores = 1
-    re.par.est = t(parallel::mclapply(rep(0, B-nr_estimates), one_resample_analysis_check2, y.iid=y.iid, L=L,
+    re.par.est = t(parallel::mclapply(rep(0, B-nr_estimates), one_resample_analysis_check, y.iid=y.iid, L=L,
                                       nscore.obj = nscore.obj, coords = coords,
                                       max.dist = max.dist, nbins = nbins,
                                       threshold=threshold.factor,
