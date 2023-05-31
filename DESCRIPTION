@@ -32,7 +32,8 @@ Imports:
     sp,
     SpatialTools,
     stats,
-    methods
+    methods, 
+    utils
 Suggests:
     knitr,
     rmarkdown,
