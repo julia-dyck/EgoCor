@@ -189,8 +189,8 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
   }
   sample = vario.mod.output$input.arguments$data[,1:3]
   sample = stats::na.omit(sample)
-  max.dist = as.numeric(vario.mod.output$infotable[1])
-  nbins = as.numeric(vario.mod.output$infotable[2]) #input nbins (not corrected ones! in case of co-locatted observations)
+  max.dist = as.numeric(vario.mod.output$info.table[1])
+  nbins = as.numeric(vario.mod.output$info.table[2]) #input nbins (not corrected ones! in case of co-locatted observations)
   fit.method = as.numeric(vario.mod.output$input.arguments$fit.method)
   emp.variance = stats::var(sample[,3])
   # check whether the inserted sv model seems probable:
@@ -219,29 +219,27 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
   ini.shape = max.dist/3
   ini.values = c(ini.partial.sill, ini.shape)
 
-  if (fit.method == 8){
-    theta.star0 = log(c(.1, ini.partial.sill, ini.shape))
-    sv.mod = stats::nlm(loss, p = theta.star0, h = emp.sv$dist, gamma_hat = emp.sv$gamma,
-              n_h = emp.sv$np)
-    mod.pars = exp(sv.mod$estimate)
-  }
-  else{
-    v = gstat::vgm(psill = ini.partial.sill, model = "Exp", range = ini.shape, nugget = 0)
-    sv.mod = gstat::fit.variogram(emp.sv, model = v,  # fitting the model with starting model
-                                  fit.sills = TRUE,
-                                  fit.ranges = TRUE,
-                                  fit.method = fit.method,
-                                  debug.level = 1, warn.if.neg = FALSE, fit.kappa = FALSE)
-    mod.pars = c(sv.mod$psill[1], sv.mod$psill[2], sv.mod$range[2])
-  }
+  # if (fit.method == 8){
+  #   theta.star0 = log(c(.1, ini.partial.sill, ini.shape))
+  #   sv.mod = stats::nlm(loss, p = theta.star0, h = emp.sv$dist, gamma_hat = emp.sv$gamma,
+  #             n_h = emp.sv$np)
+  #   mod.pars = exp(sv.mod$estimate)
+  # }
+
+  # no fit.method 8 anymore
+  v = gstat::vgm(psill = ini.partial.sill, model = "Exp", range = ini.shape, nugget = 0)
+  sv.mod = gstat::fit.variogram(emp.sv, model = v,  # fitting the model with starting model
+                                fit.sills = TRUE,
+                                fit.ranges = TRUE,
+                                fit.method = fit.method,
+                                debug.level = 1, warn.if.neg = FALSE, fit.kappa = FALSE)
+  mod.pars = c(sv.mod$psill[1], sv.mod$psill[2], sv.mod$range[2])
 
   # (3)
   Dist_mat = SpatialTools::dist1(coords) # NxN distance matrix
 
   # function for predicting the covariance based on distance
-  expmod = function(distvec, psill, phi){
-    return(psill*exp(-distvec/phi))
-  }
+  expmod = function(distvec, psill, phi) {psill*exp(-distvec/phi)}
 
   Cov_mat = apply(X = Dist_mat, MARGIN = 1, FUN = expmod, psill = mod.pars[2], phi = mod.pars[3])
 
@@ -270,7 +268,12 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
 
   nr_estimates = length(which(apply(par.est.b[,-(1:3)], 1, sum) == 0))
 
+  cat(paste("Initial estimation finished\n",nr_estimates, "of",B ,"Models converged.\n"))
+  cat("Reestimating:\n")
+
+  counter = 0
   while(nr_estimates < B){
+    if(B-nr_estimates < 50) mc.cores = 1
     re.par.est = t(parallel::mclapply(rep(0, B-nr_estimates), one_resample_analysis_check2, y.iid=y.iid, L=L,
                                       nscore.obj = nscore.obj, coords = coords,
                                       max.dist = max.dist, nbins = nbins,
@@ -280,12 +283,14 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
     re.par.est = matrix(unlist(re.par.est), nrow = length(re.par.est), byrow = T)
     par.est.b = rbind(par.est.b, re.par.est)
     nr_estimates = length(which(apply(par.est.b[,-(1:3)], 1, sum) == 0))
+    counter = counter +1
+    cat(paste(nr_estimates, "of", B, "models converged.\n"))
   }
 
   # evaluating the sds of the parameter estimates
   nr.thr = length(threshold.factor)
-  par.sds = numeric(length = 3*nr.thr)
-  cis = numeric(length = 6*nr.thr)
+  par.sds = numeric(3*nr.thr)
+  cis = numeric(6*nr.thr)
   for(i in 1:nr.thr){
     par.est.cleaned = par.est.b[which(par.est.b[,4+i] == 0 & par.est.b[,4] == 0),][1:B,]
     par.sds[(i-1)*3+(1:3)] = apply(par.est.cleaned[,1:3], 2, stats::sd)
@@ -304,7 +309,7 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
   #return(unc.est)
   ### FORMAT THE RESULTS
   est = vario.mod.output$infotable[mod.nr, 4:6]
-  unc.table = cbind(rep(est, length(threshold.factor)), unc.est$sds)
+  unc.table = as.data.frame(cbind(as.numeric(rep(est, length(threshold.factor))), unc.est$sds))
   if (nrow(unc.table) == 3){rownames(unc.table) = c("nugget effect", "partial sill", "shape")}
   colnames(unc.table) = c("Estimate", "Std. Error")
 
