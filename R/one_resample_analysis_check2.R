@@ -1,6 +1,3 @@
-
-
-
 one_resample_analysis_check2 = function(platzhalter, y.iid, L, nscore.obj, coords, max.dist, nbins, threshold.factor, fit.method = 7){
   # (6) resampling from y.iid
   resmpl = sample(y.iid, size = length(y.iid), replace = T)
@@ -16,18 +13,14 @@ one_resample_analysis_check2 = function(platzhalter, y.iid, L, nscore.obj, coord
 
   # (10) semivariogram model estimation, wls
 
-  if (fit.method == 8){
-    wls.est = sv.sep2_nlm(resmpl, coords = coords, max.dist = max.dist, nbins = nbins)
-    warning = NULL
-  }
-  else{
-    wls.est = tryCatch(sv.sep2(resmpl, coords = coords, max.dist = max.dist, nbins = nbins, fit.method = fit.method),
-                       warning = function(w) w)
-    if(methods::is(wls.est, "warning")){
-      warning = wls.est
-      wls.est = sv.sep2(resmpl, coords = coords, max.dist = max.dist, nbins = nbins, fit.method = fit.method)
-    }
-  }
+  # if (fit.method == 8){
+  #   wls.est = sv.sep2_nlm(resmpl, coords = coords, max.dist = max.dist, nbins = nbins)
+  #   warning = NULL
+  # }
+  # else{
+
+  wls = sv.sep2(resmpl, coords = coords, max.dist = max.dist, nbins = nbins, fit.method = fit.method)
+  wls.est = wls$mod.pars
 
   emp.var = stats::var(resmpl)
   mod.var = wls.est[1] + wls.est[2]
@@ -41,10 +34,9 @@ one_resample_analysis_check2 = function(platzhalter, y.iid, L, nscore.obj, coord
   wls.threshold.outcomes = rep(0, 4 + nr.thr) # 1-3 estimates, 4 convergence check, 5-... check filter
   wls.threshold.outcomes[1:3] = wls.est
   for(i in 1:nr.thr){
-    if(methods::is(warning, "warning") | wls.est[3] == "Inf"){ # change this
+    if(wls$warning | wls.est[3] == "Inf"){
       wls.threshold.outcomes[4] = 1
-    }
-    else{
+    } else{
       if(mod.var > threshold.factor[i]*emp.var | wls.est[3] < 0){ # check filter
         wls.threshold.outcomes[4 + i] = 1
       }
