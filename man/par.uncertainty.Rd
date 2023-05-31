@@ -13,7 +13,8 @@ par.uncertainty(
   nbins = NULL,
   B = 1000,
   threshold.factor = 1.2,
-  fit.method = 7
+  fit.method = 7,
+  mc.cores = 1
 )
 }
 \arguments{
@@ -48,6 +49,8 @@ of each parameter.}
 bootstrap method (see details). If not specified, a default value of 1.2 is used.}
 
 \item{fit.method}{The fit method used in the semivariogram estimation with the gstat package.}
+
+\item{mc.cores}{The number of cores used for bootstrapping, utilizing the parallel R-package. More than one core is not supported on windows systems.}
 }
 \value{
 The function returns parameter estimates and corresponding standard error estimates
