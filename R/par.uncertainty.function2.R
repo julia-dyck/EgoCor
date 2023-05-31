@@ -268,12 +268,12 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
 
   nr_estimates = length(which(apply(par.est.b[,-(1:3)], 1, sum) == 0))
 
-  cat(paste("Initial estimation finished\n",nr_estimates, "of",B ,"Models converged.\n"))
+  cat("Initial estimation finished\n", nr_estimates, "of", B ,"Models converged.\n")
   cat("Reestimating:\n")
 
   counter = 0
   while(nr_estimates < B){
-    if(B-nr_estimates < 50) mc.cores = 1
+    if(B-nr_estimates < 20) mc.cores = 1
     re.par.est = t(parallel::mclapply(rep(0, B-nr_estimates), one_resample_analysis_check2, y.iid=y.iid, L=L,
                                       nscore.obj = nscore.obj, coords = coords,
                                       max.dist = max.dist, nbins = nbins,
@@ -284,7 +284,9 @@ par.uncertainty2 = function(vario.mod.output, mod.nr,
     par.est.b = rbind(par.est.b, re.par.est)
     nr_estimates = length(which(apply(par.est.b[,-(1:3)], 1, sum) == 0))
     counter = counter +1
-    cat(paste(nr_estimates, "of", B, "models converged.\n"))
+
+    cat('\r', nr_estimates, "of", B, "models converged.")
+    flush.console()
   }
 
   # evaluating the sds of the parameter estimates
