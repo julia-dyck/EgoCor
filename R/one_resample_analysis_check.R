@@ -29,7 +29,7 @@ one_resample_analysis_check = function(platzhalter, y.iid, L, nscore.obj, coords
   # ## 1. variance estimated by the model (c_0+sigma_sq) exceeds
   #       the empirical variance*factor OR
   # ## 2. re_estimated shape parameter phi < 0 (<- actually happens in model fitting!)
-  # applied factors and nr of factors according to input argument "threshold"
+  # applied factors and nr of factors according to input argument "threshold.factor"
   nr.thr = length(threshold.factor)
   wls.threshold.outcomes = rep(0, 4 + nr.thr) # 1-3 estimates, 4 convergence check, 5-... check filter
   wls.threshold.outcomes[1:3] = wls.est
