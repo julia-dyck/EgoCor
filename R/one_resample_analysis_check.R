@@ -33,13 +33,12 @@ one_resample_analysis_check = function(platzhalter, y.iid, L, nscore.obj, coords
   nr.thr = length(threshold.factor)
   wls.threshold.outcomes = rep(0, 4 + nr.thr) # 1-3 estimates, 4 convergence check, 5-... check filter
   wls.threshold.outcomes[1:3] = wls.est
+
+  if(wls$warning | wls.est[3] == "Inf") wls.threshold.outcomes[4] = 1
+
   for(i in 1:nr.thr){
-    if(wls$warning | wls.est[3] == "Inf"){
-      wls.threshold.outcomes[4] = 1
-    } else{
-      if(mod.var > threshold.factor[i]*emp.var | wls.est[3] < 0){ # check filter
-        wls.threshold.outcomes[4 + i] = 1
-      }
+    if(mod.var > threshold.factor[i]*emp.var | wls.est[3] < 0){ # check filter
+      wls.threshold.outcomes[4 + i] = 1
     }
   }
   # vector with:
