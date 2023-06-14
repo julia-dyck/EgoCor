@@ -27,6 +27,7 @@
 #'                         bootstrap method (see details). If not specified, a default value of 1.2 is used.
 #' @param alpha Confidence parameter of the confidence interval filter method. A 1-alpha confindence interval for the data variance is built.
 #'              If the estimated total variance of the model is outside this interval, it will be disgarded for parameter uncertainty estimation.
+#'              If alpha is provided, no threshold filter will be applied.
 #' @param fit.method The fit method used in the semivariogram estimation with the gstat package.
 #' @param mc.cores The number of cores used for bootstrapping, utilizing the parallel R-package. More than one core is not supported on windows systems.
 #'
