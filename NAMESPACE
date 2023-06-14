@@ -3,6 +3,7 @@
 export(coords.plot)
 export(distance.info)
 export(par.uncertainty)
+export(par.uncertainty_ci)
 export(vario.mod)
 export(vario.reg.prep)
 importFrom(Rdpack,reprompt)
