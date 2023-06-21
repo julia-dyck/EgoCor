@@ -132,5 +132,3 @@ It is recommended to use more bootstrap samples than done here.
 ```{r, warning = FALSE}
 unc = par.uncertainty(mod_2, mod.nr = 2, B = 100)
 ```
-
-
