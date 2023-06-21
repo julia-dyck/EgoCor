@@ -362,7 +362,7 @@ par.uncertainty_ci = function(vario.mod.output, mod.nr,
   ### FORMAT THE RESULTS
 
   if(is.null(alpha)){ # threshold option
-    unc.table = as.data.frame(cbind(as.numeric(rep(par.est, length(threshold.factor))), unc.est$sds))
+    unc.table = as.data.frame(cbind(as.numeric(rep(par.est, length(threshold.factor))), ses))
     if (nrow(unc.table) == 3){rownames(unc.table) = c("nugget effect", "partial sill", "shape")}
     colnames(unc.table) = c("Estimate", "Std. Error")
 

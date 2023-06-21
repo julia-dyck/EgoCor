@@ -3,6 +3,17 @@ ci_check = function(n, emp.var, mod.var, alpha){
   CI1 = (n-1)*emp.var/qchisq(p = 1-alpha/2, df = n-1) # lower
   CI2 = (n-1)*emp.var/qchisq(p = alpha/2, df = n-1) # upper
 
+  # CI1 = (n-1)*mod.var/qchisq(p = 1-alpha/2, df = n-1) # lower
+  # CI2 = (n-1)*mod.var/qchisq(p = alpha/2, df = n-1) # upper
+  #
+  # if(CI1 <= emp.var & emp.var <= CI2){
+  #   return(TRUE)
+  # } else{
+  #   return(FALSE)
+  # }
+
+  # removed
+
   if(CI1 <= mod.var & mod.var <= CI2){
     return(TRUE)
   } else{

@@ -120,7 +120,7 @@
 
 par.uncertainty = function(vario.mod.output, mod.nr,
                            par.est = NULL, data = NULL, max.dist = NULL, nbins = NULL,
-                           B = 1000, threshold.factor = 1.2, fit.method = 7, mc.cores = 1){
+                           B = 1000, threshold.factor = 3.0, fit.method = 7, mc.cores = 1){
 
   vario.mod.output.arg <- deparse(substitute(vario.mod.output))
   mod.nr.arg <- deparse(substitute(mod.nr))
