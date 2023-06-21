@@ -276,22 +276,7 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
                                        debug.level = 1, warn.if.neg = FALSE, fit.kappa = FALSE)
   }
 
-  variofit.less.arg_nlm = function(vario){
-    theta.star0 = log(c(1, sample.var, vario$max.dist/3))
-    exp.variogram.mod = stats::nlm(loss, p = theta.star0, h = vario$empsv$dist, gamma_hat = vario$empsv$gamma,
-                            n_h = vario$empsv$np)
-    model = c("Nug", "Exp")
-    psill = exp(exp.variogram.mod$estimate[1:2])
-    range = c(0, exp(exp.variogram.mod$estimate[3]))
-    return(data.frame(model = model, psill = psill, range = range))
-  }
-
-  if (fit.method == 8){
-    vmod.list = lapply(variog.list, variofit.less.arg_nlm)
-  }
-  else{
-    vmod.list = lapply(variog.list, variofit.less.arg)
-  }
+  vmod.list = lapply(variog.list, variofit.less.arg)
 
   par.extraction = function(vmod){
     est.pars = c(vmod$psill[1], vmod$psill[2], vmod$range[2])
