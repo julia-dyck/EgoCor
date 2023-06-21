@@ -12,7 +12,7 @@ par.uncertainty(
   max.dist = NULL,
   nbins = NULL,
   B = 1000,
-  threshold.factor = 1.2,
+  threshold.factor = 3,
   fit.method = 7,
   mc.cores = 1
 )
