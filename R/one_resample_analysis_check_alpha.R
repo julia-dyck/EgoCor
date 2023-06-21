@@ -46,6 +46,7 @@ one_resample_analysis_check_alpha = function(platzhalter, y.iid, L, nscore.obj, 
   # vector with:
   # - estimates
   # - convergence warning information
+  # - potentially CI filter
   # - check filter information
   return(wls.threshold.outcomes)
 }
