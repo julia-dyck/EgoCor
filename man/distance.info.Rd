@@ -2,7 +2,7 @@
 % Please edit documentation in R/distance.info.function.R
 \name{distance.info}
 \alias{distance.info}
-\title{Pairwise Distances of Spatial Coordinates}
+\title{Pairwise distances of spatial coordinates}
 \usage{
 distance.info(data)
 }

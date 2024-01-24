@@ -2,7 +2,7 @@
 % Please edit documentation in R/vario.mod.function.gstat.R
 \name{vario.mod}
 \alias{vario.mod}
-\title{Semi-variogram modeling function}
+\title{Semi-variogram model fitting}
 \usage{
 vario.mod(
   data,

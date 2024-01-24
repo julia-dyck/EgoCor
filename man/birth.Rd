@@ -3,7 +3,7 @@
 \docType{data}
 \name{birth}
 \alias{birth}
-\title{Spatially correlated  birthweight data with artificial coordinates}
+\title{Spatially correlated birthweight data with artificial coordinates}
 \format{
 A data frame with 903 rows and 8 variables:
 \describe{

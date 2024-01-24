@@ -2,7 +2,7 @@
 % Please edit documentation in R/par.uncertainty.function.R
 \name{par.uncertainty}
 \alias{par.uncertainty}
-\title{Semi-variogram parameter uncertainty}
+\title{Semi-variogram model parameter uncertainty}
 \usage{
 par.uncertainty(
   vario.mod.output,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/vario.reg.prep.function.R
 \name{vario.reg.prep}
 \alias{vario.reg.prep}
-\title{Adjustment for covariates}
+\title{Adjustment for covariates before semi-variogram model fitting}
 \usage{
 vario.reg.prep(reg, data = NULL)
 }
@@ -51,7 +51,7 @@ hist(birth$birthweight) # attribute of interest
 
 # Linear regression model
 mod1 = lm(birthweight ~ primiparous + datediff + bmi
-+ factor(inc), data = birth)
++ inc, data = birth)
 summary(mod1)
 data.adj1 = vario.reg.prep(mod1)
 
@@ -61,9 +61,9 @@ hist(data.adj1$adj) # adjusted attribute of interest
 
 
 ## Example 2
-# Data argument within lm not provided (not recommended, but possible):
+# No data argument provided within lm (not recommended, but possible):
 mod2 = lm(birth$birthweight ~ birth$primiparous + birth$datediff + birth$bmi
-+ factor(birth$inc))
++ birth$inc)
 summary(mod2)
 # In this case, make sure to provide the data argument here:
 data.adj2 = vario.reg.prep(reg = mod2, data = birth)
