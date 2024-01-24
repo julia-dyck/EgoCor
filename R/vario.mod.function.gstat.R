@@ -1,6 +1,4 @@
-#'
-#'
-#' Semi-variogram modeling function
+#' Semi-variogram model fitting
 #'
 #' The function allows for user friendly exponential semi-variogram model fitting to data.
 #' Based on the \code{gstat} function \code{variogram}, \code{vgm} and \code{fit.variogram}, the function fits one

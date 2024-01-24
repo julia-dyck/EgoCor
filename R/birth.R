@@ -1,4 +1,4 @@
-#' Spatially correlated  birthweight data with artificial coordinates
+#' Spatially correlated birthweight data with artificial coordinates
 #'
 #' A simulated dataset containing geo-coded birthweight data with covariates.
 #' It is provided for exemplary applications of the functions

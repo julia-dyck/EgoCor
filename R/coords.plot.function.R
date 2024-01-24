@@ -1,4 +1,4 @@
-#' Spatial Data Coordinate Plot
+#'  Scatterplot of spatial coordinates
 #'
 #' Plot of the Cartesian coordinates of study participant with color and shape coded
 #' indication whether the variable of interest is observed at a specific location.

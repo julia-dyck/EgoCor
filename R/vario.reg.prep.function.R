@@ -1,4 +1,4 @@
-#' Adjustment for covariates
+#' Adjustment for covariates before semi-variogram model fitting
 #'
 #' Given a linear regression output of class 'lm' or 'lmerMod'
 #' with the attribute of interest as dependent variable,

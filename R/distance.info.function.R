@@ -1,4 +1,4 @@
-#' Pairwise Distances of Spatial Coordinates
+#' Pairwise distances of spatial coordinates
 #'
 #' A range of descriptive statistics on the distribution of the pairwise distances between observations.
 #'
