@@ -49,14 +49,13 @@ distance.info = function(data){
                 '    column 2: Cartesian y-coordinates in meters',
                 '    column 3: outcome variable \n \n',sep="\n"))
 
-  if(sum(is.na(data[,1:2])) > 0){
-    ind.missing.x = which(is.na(data[,1]))
-    ind.missing.y = which(is.na(data[,2]))
-    ind.incompl.coords = unique(c(ind.missing.x, ind.missing.y))
-    warning(paste("Data contains",
-                  length(ind.incompl.coords),
-                  "rows with missing coordinates. Rows with incomplete coordinates are ignored."))
-    data = data[-ind.incompl.coords,]
+  ### look for rows with missing values
+  comp.row = stats::complete.cases(data[,1:3])
+
+  if(sum(comp.row == F) > 0){warning(paste("Data contains",
+                                           sum(comp.row == F),
+                                           "rows with missing data. Missing data is ignored."))
+    data = data[comp.row,]
   }
 
   coordinates = as.matrix(data[,1:2])
