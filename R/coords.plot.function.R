@@ -8,7 +8,6 @@
 #'    the y-coordinates in meters in the second column,
 #'    and the values of the attribute of interest in the third column.
 #'    Additional columns are ignored.
-#' @param pch Determines the point shape used in the plot.
 #'
 #'
 #' @return
@@ -43,34 +42,32 @@ coords.plot <- function(data,...){
                 '    column 2: Cartesian y-coordinates in meters',
                 '    column 3: outcome variable \n \n',sep="\n"))
 
-  ### delete rows with incomplete coordinates
-  if(sum(is.na(data[,1:3])) > 0){                  #### WORK ON HERE
-    #ind.missing.x = which(is.na(data[,1]))
-    #ind.missing.y = which(is.na(data[,2]))
-    #ind.incompl.coords = unique(c(ind.missing.x, ind.missing.y))
-    complete.datum = stats::complete.cases(data[,1:3])
-    print(complete.datum)
-    return(complete.datum)
+  ### look for rows with missing values
+  comp.row = stats::complete.cases(data[,1:3])
+  group = ifelse(comp.row == T, "yes", "no")
+  group.f = factor(group, levels = c("yes", "no"))
 
-  }}
-    warning(paste("Data contains",
-                  length(ind.incompl.coords),
-                  "rows with missing coordinates. Rows with incomplete coordinates are ignored."))
-    data = data[-ind.incompl.coords,]
+  if(sum(comp.row == F) > 0){warning(paste("Data contains",
+                  sum(comp.row == F),
+                  "rows with missing data."))
   }
+
   ### visualization of the coordinates
-  x.range = c(min(data[,1]), max(data[,1]))
-  y.range = c(min(data[,2]), max(data[,2]))
-  # splitting up the data set in NA and non-NA
-  data_na = data[which(is.na(data[,3])), 1:2]
-  data_no_na = data[which(!is.na(data[,3])), 1:3]
+  x.range = range(data[,1])
+  y.range = range(data[,2])
+  group.col = ifelse(group == "yes", 1, 2)
+  group.pch = ifelse(group == "yes", 1, 4)
 
+  plot(data[,1:2], main = "Coordinate plot",
+       xlim = x.range, ylim = y.range,
+       col = group.col, pch = group.pch,
+       lwd = 2,
+       ...)
 
-  plot(data_no_na[,1:2], main = "Coordinate plot",
-       xlim = x.range, ylim = y.range,...)
-  graphics::points(data_na[,1], data_na[,2], pch = 4, col = "red")
-  graphics::legend("topright", title="outcome observed?", legend=c("yes  ", "no"),
-         pch = c(1,4), col = c(1,2), ncol = 2, cex = 0.8)
+  graphics::legend("topright",
+         title = "outcome observed?", legend = levels(group.f),
+         col = c(1,2), pch = c(1,4), lty = c(NA, NA), ncol = 2,
+         lwd = 2, cex = 0.8)
 
 }
 
