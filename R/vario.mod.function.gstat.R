@@ -213,9 +213,9 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
 
   ### look for rows with missing values
     comp.row = stats::complete.cases(data[,1:3])
-    if(sum(comp.row == F) > 0){warning(paste("Data contains",
+    if(sum(comp.row == F) > 0){warning(paste("Data contain",
                                              sum(comp.row == F),
-                                             "rows with missing data. Missing data is ignored."))
+                                             "rows with missing data. Missing data rows are ignored."))
     }
   data.ge = data[comp.row,1:3]
 

@@ -48,7 +48,7 @@ coords.plot <- function(data,...){
   if(sum(comp.row == F) > 0){
     warning(paste("Coordinates contain",
                   sum(comp.row == F),
-                  "rows with missing data. Missing coordinates are ignored."))
+                  "rows with missing data. Rows with incomplete coordinates are ignored."))
     data = data[comp.row,]
   }
 
