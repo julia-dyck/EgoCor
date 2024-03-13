@@ -477,7 +477,6 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
                 vmod.list = vmod.list,
                 input.arguments = input.arguments,
                 call = fct.call)
-  class(output) <- "vario.mod.output"
 
   return(output)
 }
