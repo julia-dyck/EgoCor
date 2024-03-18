@@ -30,7 +30,7 @@
 #' @export
 
 
-coords.plot <- function(data,...){
+coords.plot <- function(data){
   #### necessary packages
   # graphics
 
