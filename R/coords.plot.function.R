@@ -67,8 +67,7 @@ coords.plot <- function(data){
   plot(data[,1:2], main = "Coordinate plot",
        xlim = x.range, ylim = y.range,
        col = group.col, pch = group.pch,
-       lwd = 2,
-       ...)
+       lwd = 2)
 
   graphics::legend("topright",
          title = "outcome observed?", legend = levels(group.f),
