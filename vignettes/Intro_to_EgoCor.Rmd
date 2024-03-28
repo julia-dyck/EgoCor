@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 library(EgoCor)
 ```
 
-This is an introduction to the package EgoCor. EgoCor offers a user friendly interface displaying by using one function a range of graphics and tables of parameters to facilitate the decision making about which exponential parameters fit either raw data or residuals best. This function is based on the functions of the R package [gstat](https://CRAN.R-project.org/package=gstat). A further function providing the measure of uncertainty proposed by @dyck_sv_ses has been implemented in the package.
+This is an introduction to the package EgoCor. EgoCor offers a user friendly interface to fit and display a range semi-variogram model graphics and tables of parameters to facilitate the decision making about which exponential parameters fit either raw data or residuals best. The modeling function `vario.mod()` is based on the functions of the R package [gstat](https://CRAN.R-project.org/package=gstat). A further function providing the measure of uncertainty proposed by [@dyck_sv_ses](https://arxiv.org/abs/2202.05752). has been implemented in the package.
 With the R package EgoCor modelling the spatial correlation structure of health outcome with a measure of uncertainly is made available to non specialists.
 
 ## Statistical background
@@ -52,8 +52,8 @@ We use this dataset to illustrate the following functions:
 
 1. `coords.plot()`: for graphical description of locations;
 2. `distance.info()`: for descriptive information about distances between observations;
-3. `vario.mod()`: to fit exponential models to semi-variograms with graphical presentation;
-4. `vario.reg.prep()`: to model the spatial correlation structure of residuals of a regression model;
+3. `vario.mod()`: to fit empirical semi-variograms and based on that exponential models with graphical presentation;
+4. `vario.reg.prep()`: to extract the spatial correlation structure of residuals of a regression model;
 5. `par.uncertainty()`: to obtain bootstrap standard errors for the parameters of the exponential semi-variogram model.
 
 While detailed information can be retrieved with `help(function.name)`, a presentation and demonstration of all functions is provided in the following sections.
@@ -88,9 +88,9 @@ From all the 815 409 pairwise distances, 30 570 are of less than 2 000 meters an
 
 This function enables the simultaneous output of multiple exponential semi-variogram models fitted for a range of maximal distances and a number of bins. Thereby, the focus lies on the ability of the function to provide multiple estimation results depending on various specifications for the meta parameters max.dist and nbins.
 
-When in the default setting `shinyresults = TRUE` an interactive shiny application is opened automatically that displays the results. For the purpose of this vignette though we will set `shinyresults = FALSE` and `windowplots = TRUE`.
+In the default setting `shinyresults = TRUE`, an interactive shiny application is opened automatically that displays the results. For the purpose of this vignette though we set `shinyresults = FALSE` and `windowplots = TRUE`.
 
-The chosen maximal distance value specifies the subset of data pairs that are actually used within the semi-variogram estimation. Only data pairs with an Euclidean distance ≤ max.dist are taken into account.
+The chosen maximal distance value specifies the subset of data pairs that are incorporated in the semi-variogram estimation. Only data pairs with an Euclidean distance ≤ max.dist are taken into account.
 
 For a first exploration, it might be useful to try a range of maximal distances to locate where the range might be situated:
 
@@ -101,13 +101,15 @@ You can also get the estimated parameters later by
 ```{r}
 mod$infotable
 ```
-The maximum distance of 800m seems to provide a good fit for this dataset. We can now refine the analysis by varying the number of bins.
-The nbins parameter specifies the number of lags of the empirical semi-variogram to be estimated. A high number of lags might lead to small within-lag-sample-size and thus to an unstable estimate. Simultaneously, a too small number of lags might lead to a model, that does not detect a spatial correlation structure at all.
+The maximal distance of 800 m seems to provide a good fit for this dataset. We can now refine the analysis by varying the number of bins or lags.
+The nbins parameter specifies the number of lags of the empirical semi-variogram to be estimated. A high number of lags might lead to a small within-lag-sample-size and thus to an unstable estimate. Simultaneously, a too small number of lags might lead to a model that does not detect a spatial correlation structure at all.
 
 ```{r fig4, fig.height = 4.5, fig.width = 6, fig.align = "center"}
 mod_2 = vario.mod(birth, max.dist = 800, nbins = c(11,12,13), 
                   shinyresults = FALSE, windowplots = TRUE)
 ```
+All models' graphical representations look similar. According to the relative bias model 3 provides a slightly better fit. We choose model 3 with max.dist = 800 and nbins = 13 as final model.
+
 
 ### 4. vario.reg.prep()
 
@@ -124,9 +126,10 @@ The results point towards a reduced spatial correlation structure with a maximal
 
 ### 5. par.uncertainty()
 
-This function provides the filtered bootstrap standard errors for all three exponential model parameters. As the bootstrap can take some time, it is not called by the function `vario.mod()` directly so that the bootstrap is not executed in all models estimated by `par.uncertainty()`. This is left to the choice of the user by selecting the model number in the option `mod.nr`, thus saving execution time.
-The main output of this function is a table with parameter estimates and standard errors for all three parameters of the estimated model chosen by specifying `mod.nr`.
-The user can either provide a model estimated by `vario.mod()` and a model number that specifies which one to use or provide the parameter estimates, the data, the maximum distance and number of bins seperately. The first option is more convenient, therefore we chose it here. The second option enables standard error estimation for exponential semi-variogram models for which no result of class `"vario.mod.output"` is available. 
+This function provides the filtered bootstrap standard errors for all three exponential model parameters. As the bootstrap can take some time, it is not called by the function `vario.mod()` directly so that the bootstrap is not executed automatically for all fitted models. This is left to the choice of the user by selecting one specific fitted model, thus saving execution time.
+The main output of the function is a table with parameter estimates and standard errors for all three parameters of the estimated model.
+The user can either provide a model estimated by `vario.mod()` and a model number that specifies which one to use or provide the parameter estimates, the data, the maximum distance and number of bins seperately. 
+The first option is more convenient, therefore we chose it here. The second option enables standard error estimation for exponential semi-variogram models for which no result of class `"vario.mod.output"` is available. This might be useful if a fitted model which was not obtained with EgoCor (eg. estimated directly with gstat functions or other software making use of the same estimation algorithm) shall be investigated with respect to parameter standard errors.
 It is recommended to use more bootstrap samples than done here.
 
 ```{r, warning = FALSE}
