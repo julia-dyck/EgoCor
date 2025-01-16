@@ -8,6 +8,7 @@
 #'    the y-coordinates in meters in the second column,
 #'    and the values of the attribute of interest in the third column.
 #'    Additional columns are ignored.
+#'  @param legend.pos position of the legend in the plot. Default is "topright".
 #'
 #'
 #' @return
@@ -30,7 +31,7 @@
 #' @export
 
 
-coords.plot <- function(data){
+coords.plot <- function(data, legend.pos = "topright"){
   #### necessary packages
   # graphics
 
@@ -69,7 +70,7 @@ coords.plot <- function(data){
        col = group.col, pch = group.pch,
        lwd = 2)
 
-  graphics::legend("topright",
+  graphics::legend(legend.pos,
          title = "outcome observed?", legend = levels(group.f),
          col = c(1,2), pch = c(1,4), lty = c(NA, NA), ncol = 2,
          lwd = 2, cex = 0.8)
