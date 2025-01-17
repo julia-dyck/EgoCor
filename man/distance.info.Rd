@@ -7,8 +7,10 @@
 distance.info(data)
 }
 \arguments{
-\item{data}{A data frame or matrix containing the x-coordinates in the first column
-and the y-coordinates in the second column.
+\item{data}{data A data frame or matrix containing
+the x-coordinates in meters in the first column,
+the y-coordinates in meters in the second column,
+and the values of the attribute of interest in the third column.
 Additional columns are ignored.}
 }
 \value{
