@@ -2,9 +2,11 @@
 #'
 #' A range of descriptive statistics on the distribution of the pairwise distances between observations.
 #'
-#' @param data A data frame or matrix containing the x-coordinates in the first column
-#'                    and the y-coordinates in the second column.
-#'                    Additional columns are ignored.
+#' @param data data A data frame or matrix containing
+#'    the x-coordinates in meters in the first column,
+#'    the y-coordinates in meters in the second column,
+#'    and the values of the attribute of interest in the third column.
+#'    Additional columns are ignored.
 #'
 #' @return A list containing:
 #'
@@ -42,6 +44,8 @@ distance.info = function(data){
   #graphics
 
   #### data input: formatting
+
+  if(!is.data.frame(data) & !is.matrix(data)){stop("Input data must be a data frame or matrix.\n")}
   if(ncol(data)>3){warning('Data matrix contains more than 3 columns. Are the columns in correct order?\n')}
   message(paste('Message:',
                 'Input data interpretation:',
@@ -51,6 +55,7 @@ distance.info = function(data){
 
   ### look for rows with missing values
   comp.row = stats::complete.cases(data[,1:3])
+  if(sum(comp.row) < 2){stop("Cannot calculate distances for < 2 complete rows.")}
 
   if(sum(comp.row == F) > 0){warning(paste("Data contain",
                                            sum(comp.row == F),
