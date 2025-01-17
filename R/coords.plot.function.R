@@ -8,7 +8,10 @@
 #'    the y-coordinates in meters in the second column,
 #'    and the values of the attribute of interest in the third column.
 #'    Additional columns are ignored.
-#'  @param legend.pos position of the legend in the plot. Default is "topright".
+#'
+#' @param legend.pos position of the legend in the plot specified by a single keyword
+#' out of \code{"none", "bottomright", "bottom", "bottomleft", "left", "topleft", "top", "topright"}.
+#' Default is \code{"topright"}.
 #'
 #'
 #' @return
@@ -27,6 +30,7 @@
 #'
 #' ## Example 2
 #' coords.plot(birth)
+#' coords.plot(birth, legend.pos = "bottomright")
 #'
 #' @export
 
@@ -42,6 +46,7 @@ coords.plot <- function(data, legend.pos = "topright"){
                 '    column 1: Cartesian x-coordinates in meters',
                 '    column 2: Cartesian y-coordinates in meters',
                 '    column 3: outcome variable \n \n',sep="\n"))
+
 
   ### look for rows with missing values in coordinates
   comp.row = stats::complete.cases(data[,1:2])
@@ -69,6 +74,14 @@ coords.plot <- function(data, legend.pos = "topright"){
        xlim = x.range, ylim = y.range,
        col = group.col, pch = group.pch,
        lwd = 2)
+
+  if(!legend.pos %in% c("none", "bottomright", "bottom", "bottomleft", "left", "topleft", "top", "topright")){
+    warning("Invalid legend position.\n Please use one of the following: 'bottomright', 'bottom', 'bottomleft', 'left', 'topleft', 'top', 'topright'.")
+  }
+
+  if(legend.pos == "none"){
+    return()
+  }
 
   graphics::legend(legend.pos,
          title = "outcome observed?", legend = levels(group.f),

@@ -4,7 +4,7 @@
 \alias{coords.plot}
 \title{Scatterplot of spatial coordinates}
 \usage{
-coords.plot(data)
+coords.plot(data, legend.pos = "topright")
 }
 \arguments{
 \item{data}{A data frame or matrix containing
@@ -12,6 +12,10 @@ the x-coordinates in meters in the first column,
 the y-coordinates in meters in the second column,
 and the values of the attribute of interest in the third column.
 Additional columns are ignored.}
+
+\item{legend.pos}{position of the legend in the plot specified by a single keyword
+out of \code{"none", "bottomright", "bottom", "bottomleft", "left", "topleft", "top", "topright"}.
+Default is \code{"topright"}.}
 }
 \value{
 The function returns a plot showing the points based on Cartesian coordinates. A black circle indicates that the
@@ -31,5 +35,6 @@ coords.plot(dataset)
 
 ## Example 2
 coords.plot(birth)
+coords.plot(birth, legend.pos = "bottomright")
 
 }
