@@ -39,7 +39,8 @@ coords.plot <- function(data, legend.pos = "topright"){
   #### necessary packages
   # graphics
 
-  ### message about required data format
+  ### messages about required data format
+  if(!is.data.frame(data) & !is.matrix(data)){stop("Input data must be a data frame or matrix.\n")}
   if(ncol(data)>3){warning('Data matrix contains more than 3 columns. Are the columns in correct order?\n')}
   message(paste('Message:',
                 'Input data interpretation:',
@@ -76,7 +77,7 @@ coords.plot <- function(data, legend.pos = "topright"){
        lwd = 2)
 
   if(!legend.pos %in% c("none", "bottomright", "bottom", "bottomleft", "left", "topleft", "top", "topright")){
-    warning("Invalid legend position.\n Please use one of the following: 'bottomright', 'bottom', 'bottomleft', 'left', 'topleft', 'top', 'topright'.")
+    stop("Invalid legend position: should be one of 'none', 'bottomright', 'bottom', 'bottomleft', 'left', 'topleft', 'top', 'topright'")
   }
 
   if(legend.pos == "none"){
