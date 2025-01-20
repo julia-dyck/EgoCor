@@ -5,7 +5,7 @@ test_that("vario.reg.prep handles non-lm or non-lmerMod objects", {
 
 test_that("vario.reg.prep throws error when no data stored in lm/lmerMod object and no data arg", {
   mod = lm(birth$birthweight ~ birth$primiparous + birth$datediff + birth$bmi
-            + birth$inc)
+           + birth$inc)
   expect_error(vario.reg.prep(mod),"The geo-coded dataset used for regression cannot be recalled from the current environment.")
 })
 
