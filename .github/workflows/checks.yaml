@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: |
           install.packages('pak')
-          pak::pkg_sysreqs()
+          pak::pkg_sysreqs(os_release = "20.04")
           install.packages('remotes')
           remotes::install_deps()
 
