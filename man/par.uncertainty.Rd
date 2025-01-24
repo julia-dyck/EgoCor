@@ -46,7 +46,7 @@ It is automatically extracted from the vario.mod.output, if provided.}
 of each parameter.}
 
 \item{threshold.factor}{The threshold factor specifies the filter within the filtered
-bootstrap method (see details). If not specified, a default value of 1.2 is used.}
+bootstrap method (see details). If not specified, a default value of 3 is used.}
 
 \item{fit.method}{The fit method used in the semivariogram estimation with the gstat package.}
 

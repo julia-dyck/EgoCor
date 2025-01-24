@@ -24,7 +24,7 @@
 #' @param B The number of bootstrap repetitions to generate a set of re-estimates
 #'          of each parameter.
 #' @param threshold.factor The threshold factor specifies the filter within the filtered
-#'                         bootstrap method (see details). If not specified, a default value of 1.2 is used.
+#'                         bootstrap method (see details). If not specified, a default value of 3 is used.
 #' @param fit.method The fit method used in the semivariogram estimation with the gstat package.
 #' @param mc.cores The number of cores used for bootstrapping, utilizing the parallel R-package. More than one core is not supported on windows systems.
 #'
