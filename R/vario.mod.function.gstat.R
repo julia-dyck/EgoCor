@@ -267,11 +267,20 @@ vario.mod = function(data, max.dist = c(2000,1500,1000,750,500,250), nbins = 13,
     ini.partial.sill <- sample.var # partial sill parameter of the exp. model (also called sigmasq)
     ini.shape <- vario$max.dist/3 # oder /4; shape parameter of the exp. model (also called phi)
     v = gstat::vgm(psill = ini.partial.sill, model = "Exp", range = ini.shape, nugget = 0)
-    exp.variogram.mod <- gstat::fit.variogram(vario$empsv, model = v,  # fitting the model with starting model
+    exp.variogram.mod <- tryCatch(gstat::fit.variogram(vario$empsv, model = v,  # fitting the model with starting model
                                        fit.sills = TRUE,
                                        fit.ranges = TRUE,
                                        fit.method = fit.method,
-                                       debug.level = 1, warn.if.neg = FALSE, fit.kappa = FALSE)
+                                       debug.level = 1, warn.if.neg = FALSE, fit.kappa = FALSE),
+                                  warning = function(w) {w},
+                                  error = function(e) {e})
+
+    if(methods::is(sv.mod, "error")){
+      stop("Error in gstat::fit.variogram(). Try a different model (other max.dist and/or nbins).")
+    }
+    if(methods::is(sv.mod, "warning")){
+      warning("Warning in gstat::fit.variogram().")
+    }
   }
 
   vmod.list = lapply(variog.list, variofit.less.arg)
