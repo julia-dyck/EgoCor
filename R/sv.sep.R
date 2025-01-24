@@ -12,9 +12,15 @@ sv.sep = function(data, coords, max.dist, nbins, fit.method){
                                 fit.ranges = TRUE,
                                 fit.method = fit.method,
                                 debug.level = 1, warn.if.neg = FALSE, fit.kappa = FALSE),
-                    warning = function(w) w)
+                    warning = function(w) {w},
+                    error = function(e) {e})
 
   warning = F
+  if(methods::is(sv.mod, "error")){
+    warning = T
+    mod.pars = c(0,0, Inf) # if fit.variogram returns error -> result not included in bootstrap estimate
+                           # mod.pars[3] = "Inf" triggers exclusion of bootstrap estimate in one_resample_analysis_check
+  }
   if(methods::is(sv.mod, "warning")){
     warning = T
     sv.mod = gstat::fit.variogram(emp.sv, model = v,  # fitting the model with starting model
