@@ -27,16 +27,18 @@ test_that("vario.mod works with multiple max.dist and nbins", {
   expect_equal(nrow(result$infotable), 2)
 })
 
-#
-# # output validation
-#
-#
-# test_that("vario.mod returns output with correct class", {
-#   expect_s3_class(suppressWarnings(vario.mod(data = birth, shinyresults = F)), "vario.mod.output")
-# })
-#
-#
-# test_that("vario.mod returns output with correct output elements", {
-#   expect_named(suppressWarnings(vario.mod(data = birth, shinyresults = F)), c("infotable", "variog.list", "vmod.list", "input.arguments", "call"))
-# })
+
+# output validation
+
+
+test_that("vario.mod returns output with correct class", {
+  expect_s3_class(suppressWarnings(vario.mod(data = birth[,1:3], max.dist = 600, nbins = 12, shinyresults = F)),
+                  "vario.mod.output")
+})
+
+
+test_that("vario.mod returns output with correct output elements", {
+  expect_named(suppressWarnings(vario.mod(data = birth[,1:3], max.dist = 600, nbins = 12, shinyresults = F)),
+               c("infotable", "variog.list", "vmod.list", "input.arguments", "call"))
+})
 
