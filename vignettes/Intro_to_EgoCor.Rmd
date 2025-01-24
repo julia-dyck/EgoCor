@@ -134,8 +134,7 @@ The first option is more convenient, therefore we chose it here. The second opti
 It is recommended to use more bootstrap samples than done here.
 
 ```{r par.uncertainty, warning = FALSE}
-if(inherits(mod_2,"vario.mod.output")){
-unc = par.uncertainty(mod_2, mod.nr = 2, B = 100)
+unc = par.uncertainty(models, mod.nr = 1, B = 100)
 unc$unc.table
-}
+
 ```
