@@ -69,6 +69,7 @@ The purpose of this function is to look at the spatial distribution of observati
 
 ```{r fig1, fig.height = 4.5, fig.width = 6, fig.align = "center"}
 coords.plot(birth)
+coords.plot(birth, legend.pos = "bottomright")
 ```
 
 ### 2. distance.info()
@@ -134,4 +135,5 @@ It is recommended to use more bootstrap samples than done here.
 
 ```{r par.uncertainty, warning = FALSE}
 unc = par.uncertainty(mod_2, mod.nr = 2, B = 100)
+unc$unc.table
 ```
