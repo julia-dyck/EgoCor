@@ -233,15 +233,7 @@ par.uncertainty = function(vario.mod.output, mod.nr,
                                 fit.ranges = TRUE,
                                 fit.method = fit.method,
                                 debug.level = 1, warn.if.neg = FALSE, fit.kappa = FALSE),
-                    warning = function(w) {w},
-                    error = function(e) {e})
-
-  if(methods::is(sv.mod, "error")){
-    stop("Error in gstat::fit.variogram(). Try a different model (other max.dist and/or nbins).")
-  }
-  if(methods::is(sv.mod, "warning")){
-    warning("Warning in gstat::fit.variogram().")
-  }
+                    error = function(e) {stop("Error in gstat::fit.variogram(). Try a different model (other max.dist and/or nbins).")})
 
   mod.pars = c(sv.mod$psill[1], sv.mod$psill[2], sv.mod$range[2])
 
