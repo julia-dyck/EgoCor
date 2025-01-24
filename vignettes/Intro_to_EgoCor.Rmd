@@ -134,6 +134,6 @@ The first option is more convenient, therefore we chose it here. The second opti
 It is recommended to use more bootstrap samples than done here.
 
 ```{r par.uncertainty, warning = FALSE}
-unc = par.uncertainty(mod_2, mod.nr = 2, B = 100)
-unc$unc.table
+#unc = par.uncertainty(mod_2, mod.nr = 2, B = 100)
+#unc$unc.table
 ```
