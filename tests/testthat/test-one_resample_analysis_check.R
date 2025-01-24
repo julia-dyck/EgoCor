@@ -18,7 +18,8 @@ test_that("one_resample_analysis_check works correctly with valid inputs", {
   L <- diag(length(y.iid))
 
   # Run the analysis function
-  result <- EgoCor:::one_resample_analysis_check(platzhalter = NULL,  # placeholder is not used in the function
+  result <- suppressWarnings(
+    EgoCor:::one_resample_analysis_check(platzhalter = NULL,  # placeholder is not used in the function
                                         y.iid = y.iid,
                                         L = L,
                                         nscore.obj = nscore.obj,
@@ -26,6 +27,7 @@ test_that("one_resample_analysis_check works correctly with valid inputs", {
                                         max.dist = max.dist,
                                         nbins = nbins,
                                         threshold.factor = threshold.factor)
+  )
 
   # Check that the result is a vector of length 6 (3 estimates + 1 convergence + 2 threshold checks)
   expect_true(length(result) == 4 + length(threshold.factor))

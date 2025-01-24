@@ -11,7 +11,9 @@ test_that("sv.sep works correctly with valid inputs", {
   fit.method <- 7
 
   # Run the function
-  result <- EgoCor:::sv.sep(data, coords, max.dist, nbins, fit.method)
+  result <- suppressWarnings(
+    EgoCor:::sv.sep(data, coords, max.dist, nbins, fit.method)
+  )
 
   # Check if the result is a list containing model parameters and warning status
   expect_warning(EgoCor:::sv.sep(data, coords, max.dist, nbins, fit.method)) # cause of convergence warning in gstat
