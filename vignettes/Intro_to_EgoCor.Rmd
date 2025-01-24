@@ -41,7 +41,7 @@ The simulated dataset birth is provided with the package EgoCor. The dataset is 
 * weight: weight of the mother at first medical appointment; 
 * inc: income quintile (0, 1, 2, 3, 4).
 
-```{r}
+```{r show birth data}
 head(birth)
 ```
 
@@ -98,7 +98,7 @@ For a first exploration, it might be useful to try a range of maximal distances 
 mod = vario.mod(birth, max.dist = c(1000,800,600), shinyresults = FALSE, windowplots = TRUE)
 ```
 You can also get the estimated parameters later by
-```{r}
+```{r variomod output}
 mod$infotable
 ```
 The maximal distance of 800 m seems to provide a good fit for this dataset. We can now refine the analysis by varying the number of bins or lags.
@@ -132,6 +132,6 @@ The user can either provide a model estimated by `vario.mod()` and a model numbe
 The first option is more convenient, therefore we chose it here. The second option enables standard error estimation for exponential semi-variogram models for which no result of class `"vario.mod.output"` is available. This might be useful if a fitted model which was not obtained with EgoCor (eg. estimated directly with gstat functions or other software making use of the same estimation algorithm) shall be investigated with respect to parameter standard errors.
 It is recommended to use more bootstrap samples than done here.
 
-```{r, warning = FALSE}
+```{r par.uncertainty, warning = FALSE}
 unc = par.uncertainty(mod_2, mod.nr = 2, B = 100)
 ```
