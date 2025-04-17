@@ -23,6 +23,12 @@ and maximal distance. Furthermore, the outcome of interest can be
 adjusted for covariates by fitting a linear regression in a preliminary
 step before the semi-variogram fitting process.
 
+### See also 
+
+Dyck, J., Koslik, J.-O., &amp; Sauzet, O. (2025). EgoCor: An R Package to Facilitate the Use of Exponential Semi-Variograms for Modelling the Local Spatial Correlation Structure in Social Epidemiology. <i>Journal of Open Research Software</i>, <i>13</i>(1), 6. https://doi.org/10.5334/jors.517
+
+for information on the purpose and usage of EgoCor.
+
 ## Installation
 
 You can install the EgoCor package from
