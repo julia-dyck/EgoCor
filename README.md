@@ -1,6 +1,3 @@
-
-# {EgoCor}: Simple Presentation of Estimated Exponential Semi-Variograms
-
 <!-- badges: start -->
 [![CRAN
 status](https://www.r-pkg.org/badges/version/EgoCor)](https://CRAN.R-project.org/package=EgoCor)
@@ -8,6 +5,10 @@ status](https://www.r-pkg.org/badges/version/EgoCor)](https://CRAN.R-project.org
 downloads](https://cranlogs.r-pkg.org/badges/last-month/EgoCor)](https://cran.r-project.org/package=EgoCor)
 [![R-CMD-check](https://github.com/julia-dyck/EgoCor/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/julia-dyck/EgoCor/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
+
+<img src="man/figures/Logo_EgoCor.png" align="right" style="height:170px; width:auto;">
+
+# EgoCor: Simple Presentation of Estimated Exponential Semi-Variograms 
 
 ## Description
 
